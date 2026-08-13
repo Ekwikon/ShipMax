@@ -75,7 +75,18 @@
 
     <!-- 📱 Mobile Overlay Backdrop (ฉากมืดเมื่อเปิดเมนูในมือถือ) -->
     <div id="mobile-sidebar-backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 bg-slate-900/50 z-30 hidden md:hidden transition-opacity"></div>
-
+    
+<!-- Top Header สำหรับจอมือถือ (จะแสดงเฉพาะบนมือถือ) -->
+<div class="md:hidden bg-slate-900 text-white p-4 flex justify-between items-center sticky top-0 z-50">
+    <div class="flex items-center gap-2 font-bold text-lg text-emerald-400">
+        <i class="fas fa-box"></i>
+        <span>ShipMax</span>
+    </div>
+    <!-- ปุ่ม Hamburger กดเปิด-ปิด Sidebar บนมือถือ -->
+    <button onclick="toggleMobileSidebar()" class="p-2 text-slate-300 hover:text-white focus:outline-none">
+        <i class="fas fa-bars text-xl"></i>
+    </button>
+</div>
     <!-- 📌 Sidebar Navigation (สไลด์เข้า-ออก ในมือถือ และแสดงถาวรในคอม) -->
     <aside id="main-sidebar" class="fixed md:relative inset-y-0 left-0 w-64 bg-slate-900 text-white flex flex-col justify-between p-6 shrink-0 z-40 border-r border-slate-800 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out hidden">
         <div>
