@@ -574,6 +574,55 @@ function copyToClipboard() {
     alert("📋 คัดลอกที่อยู่เรียบร้อยครับ!");
 }
 
+// ฟังก์ชัน เปิด/ปิด Sidebar ในมือถือ
+function toggleMobileMenu() {
+    const sidebar = document.getElementById('main-sidebar');
+    const backdrop = document.getElementById('mobile-sidebar-backdrop');
+    
+    if (sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+    } else {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+    }
+}
+
+// ฟังก์ชัน ปิดเมนูอัตโนมัติเมื่อกดเลือกเมนู
+function closeMobileMenu() {
+    const sidebar = document.getElementById('main-sidebar');
+    const backdrop = document.getElementById('mobile-sidebar-backdrop');
+    sidebar.classList.add('-translate-x-full');
+    backdrop.classList.add('hidden');
+}
+
+// ปรับปรุงฟังก์ชัน handleLogin
+function handleLogin(e) {
+    if (e) e.preventDefault();
+
+    document.getElementById('login-overlay').classList.add('hidden');
+
+    const sidebar = document.getElementById('main-sidebar');
+    sidebar.classList.remove('hidden');
+    
+    document.getElementById('main-content').classList.remove('hidden');
+    document.getElementById('ai-chat-btn').classList.remove('hidden');
+
+    switchPage('dashboard');
+}
+
+// ปรับปรุงฟังก์ชัน handleLogout
+function handleLogout() {
+    document.getElementById('login-overlay').classList.remove('hidden');
+
+    const sidebar = document.getElementById('main-sidebar');
+    sidebar.classList.add('hidden');
+    closeMobileMenu();
+
+    document.getElementById('main-content').classList.add('hidden');
+    document.getElementById('ai-chat-btn').classList.add('hidden');
+}
+
 // ======================================================
 // MAP & TRACKING FUNCTIONS
 // ======================================================
@@ -725,8 +774,10 @@ function appendMessage(text, sender) {
 function speakText(text) {
     if (!('speechSynthesis' in window)) return;
 
+    // 1. ยกเลิกเสียงเดิมที่กำลังเล่นอยู่
     window.speechSynthesis.cancel();
 
+    // 2. ล้าง HTML / Markdown
     let cleanText = text
         .replace(/<[^>]*>/g, '')
         .replace(/\*\*/g, '')
@@ -737,30 +788,32 @@ function speakText(text) {
 
     if (!cleanText) return;
 
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.lang = 'th-TH';
-    utterance.rate = 1.0;
-    utterance.pitch = 1.0;
-
-    const getThaiVoice = () => {
+    const playSpeech = () => {
         const voices = window.speechSynthesis.getVoices();
-        const thaiVoice = voices.find(voice => 
-            voice.lang.includes('th') || 
-            voice.lang.includes('TH') || 
-            voice.name.toLowerCase().includes('thai')
-        );
+
+        // ค้นหาเสียงภาษาไทยเสียงเดียวที่ดีที่สุดในระบบ
+        const thaiVoice = voices.find(v => v.name.includes('Google') && v.lang.includes('th'))
+                       || voices.find(v => v.lang.includes('th') || v.name.toLowerCase().includes('thai'));
+
+        const utterance = new SpeechSynthesisUtterance(cleanText);
 
         if (thaiVoice) {
             utterance.voice = thaiVoice;
         }
         
+        utterance.lang = 'th-TH';
+        
+        // ปรับจังหวะความเร็วและโทนเสียงให้อ่านคำทับศัพท์อังกฤษได้ลื่นไหลขึ้น
+        utterance.rate = 0.85; // ความเร็วระดับกำลังพอดี ไม่ช้าจนยาน และไม่ไวเกินไป
+        utterance.pitch = 1.0;
+
         window.speechSynthesis.speak(utterance);
     };
 
     if (window.speechSynthesis.getVoices().length > 0) {
-        getThaiVoice();
+        playSpeech();
     } else {
-        window.speechSynthesis.onvoiceschanged = getThaiVoice;
+        window.speechSynthesis.onvoiceschanged = playSpeech;
     }
 }
 
