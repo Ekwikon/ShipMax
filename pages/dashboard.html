@@ -1,0 +1,105 @@
+<main class="space-y-6">
+    <div class="flex justify-between items-center">
+        <div>
+            <h2 class="text-xl font-bold text-slate-900">📊 สถานะสินค้าคงคลังปัจจุบัน</h2>
+            <p class="text-xs text-slate-500 mt-1">ข้อมูลเชื่อมต่อตรงจาก Google Sheet (Stock)</p>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="fetchStockFromGoogleSheet()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-3 py-2 rounded-xl transition">
+                🔄 รีเฟรชสต็อก
+            </button>
+            <button onclick="document.getElementById('add-product-modal').classList.remove('hidden')" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-4 py-2 rounded-xl transition shadow-sm">
+                ➕ เพิ่มสินค้าใหม่
+            </button>
+        </div>
+    </div>
+
+    <!-- สรุปตัวเลข 4 ช่อง -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="text-xs font-semibold text-slate-400">สินค้าทั้งหมดในคลัง</div>
+            <div class="text-2xl font-bold text-slate-900 mt-2"><span id="home-total-stock">0</span> <span class="text-xs font-normal">ชิ้น</span></div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm border-l-4 border-emerald-500">
+            <div class="text-xs font-semibold text-slate-400">จำนวนรายการสินค้า</div>
+            <div class="text-2xl font-bold text-emerald-600 mt-2"><span id="home-item-count">0</span> <span class="text-xs font-normal">รายการ</span></div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm border-l-4 border-rose-500">
+            <div class="text-xs font-semibold text-slate-400">⚠️ สต็อกเตือนขั้นต่ำ</div>
+            <div class="text-2xl font-bold text-rose-600 mt-2"><span id="home-low-stock-count">0</span> <span class="text-xs font-normal">รายการ</span></div>
+        </div>
+        <div class="bg-emerald-50 p-6 rounded-2xl border border-emerald-200 shadow-sm border-l-4 border-emerald-500">
+            <div class="text-xs font-semibold text-emerald-800">สถานะเชื่อมต่อ Google Sheet</div>
+            <div class="text-sm font-bold text-emerald-700 mt-3">เชื่อมต่อชีต Stock เรียบร้อย</div>
+        </div>
+    </div>
+
+    <!-- ตารางคลังสินค้า ดึงจาก Google Sheet -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <h3 class="text-sm font-bold text-slate-900">📦 รายการสินค้าในคลัง (จาก Google Sheet)</h3>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-500">
+                        <th class="p-3">SKU (รหัสสินค้า)</th>
+                        <th class="p-3">ProductName (ชื่อสินค้า)</th>
+                        <th class="p-3">CostPrice (ต้นทุน)</th>
+                        <th class="p-3">SellingPrice (ราคาขาย)</th>
+                        <th class="p-3">Quantity (คงเหลือ)</th>
+                        <th class="p-3">สถานะสต็อก</th>
+                    </tr>
+                </thead>
+                <tbody id="stock-table-body" class="divide-y divide-slate-100">
+                    <tr><td colspan="6" class="p-4 text-center text-slate-400">กำลังโหลดข้อมูลสินค้า...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal ป๊อปอัพฟอร์มเพิ่มสินค้าใหม่ -->
+    <div id="add-product-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="font-bold text-slate-800">➕ เพิ่มสินค้าใหม่ลง Google Sheet</h3>
+                <button onclick="document.getElementById('add-product-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">✕</button>
+            </div>
+            
+            <form id="add-product-form" onsubmit="handleAddNewProduct(event)" class="space-y-3">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600">SKU (รหัสสินค้า)</label>
+                        <input type="text" id="p-sku" required class="w-full text-xs p-2.5 border rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500" placeholder="10003">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600">ชื่อสินค้า</label>
+                        <input type="text" id="p-name" required class="w-full text-xs p-2.5 border rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500" placeholder="ซองพัสดุ ปณ.">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600">ต้นทุน (บาท)</label>
+                        <input type="number" id="p-cost" required class="w-full text-xs p-2.5 border rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500" placeholder="100">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600">ราคาขาย (บาท)</label>
+                        <input type="number" id="p-sell" required class="w-full text-xs p-2.5 border rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500" placeholder="250">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600">จำนวนสต็อก</label>
+                        <input type="number" id="p-qty" required class="w-full text-xs p-2.5 border rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500" placeholder="50">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600">เตือนเมื่อต่ำกว่า</label>
+                        <input type="number" id="p-min" value="5" required class="w-full text-xs p-2.5 border rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                </div>
+                <div class="pt-3 flex gap-2">
+                    <button type="button" onclick="document.getElementById('add-product-modal').classList.add('hidden')" class="w-1/2 py-2.5 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold">ยกเลิก</button>
+                    <button type="submit" id="btn-save-prod" class="w-1/2 py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-semibold hover:bg-emerald-700">💾 บันทึกลง Sheet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
