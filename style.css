@@ -240,3 +240,21 @@ html.dark div[class*="rounded"] {
         box-shadow: 0 0 16px rgba(16, 185, 129, 0.15);
     }
 }
+/* ==========================================
+   🎯 FIX: แก้ไขปุ่มรีเฟรช GPS ตัวอักษรจม
+   ========================================== */
+html.dark button:contains("รีเฟรช"),
+html.dark button[onclick*="GPS"],
+html.dark button[onclick*="gps"],
+html.dark button[id*="refresh"],
+html.dark button[class*="refresh"] {
+    background-color: #121a2d !important;
+    color: #ffffff !important; /* ปรับข้อความให้เป็นสีขาวสว่าง */
+    border: 1px solid rgba(16, 185, 129, 0.4) !important;
+}
+
+/* กรณีปุ่มข้างต้นใช้ span หรือ icon ข้างใน */
+html.dark button:contains("รีเฟรช") *,
+html.dark button[onclick*="gps"] * {
+    color: #ffffff !important;
+}
