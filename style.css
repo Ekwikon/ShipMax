@@ -180,3 +180,30 @@ html.dark [class*="sidebar"] a, html.dark [class*="sidebar"] button {
     border: initial;
     box-shadow: initial;
 }
+/* ==========================================
+   🎯 FIX: หน้าติดตามพัสดุ + ปุ่มคุยกับ AI
+   ========================================== */
+
+/* 1. แก้ข้อความหัวข้อ 1. เลือกบริษัทขนส่ง และ 2. กรอกหมายเลขพัสดุ (ให้เป็นสีดำเข้ม อ่านง่ายบนพื้นขาว) */
+html.dark div.bg-white span,
+html.dark div.bg-white label,
+html.dark div[class*="bg-white"] span,
+html.dark div[class*="bg-white"] label {
+    color: #334155 !important;
+    font-weight: 600 !important;
+}
+
+/* 2. เปลี่ยนตัวอักษรบนปุ่ม "คุยกับ AI ผู้ช่วย" ให้เป็นสีดำเข้ม */
+html.dark button[class*="fixed"],
+html.dark button[onclick*="ai"],
+html.dark button[onclick*="AI"],
+html.dark #ai-btn,
+html.dark .ai-btn {
+    color: #000000 !important;
+}
+
+html.dark button[class*="fixed"] *,
+html.dark button[onclick*="ai"] *,
+html.dark button[onclick*="AI"] * {
+    color: #000000 !important;
+}
