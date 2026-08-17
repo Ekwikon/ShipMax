@@ -175,40 +175,4 @@ html.dark div:has(> button[class*="bg-emerald"]) > button:not([class*="bg-emeral
     background-color: #1e293b !important;
     border-color: #10b981 !important;
 }
-/* ==========================================
-   🎯 FIX: ซิงก์สีการ์ด 4 ใบด้านบนตามลำดับ (100% Work)
-   ========================================== */
 
-/* การ์ดที่ 1: ยอดขายรวม (Revenue) -> สีฟ้าสด */
-html.dark main div.grid > div:nth-child(1) span,
-html.dark main div.grid > div:nth-child(1) div,
-html.dark main div.grid > div:nth-child(1) p {
-    color: #38bdf8 !important;
-}
-
-/* การ์ดที่ 2: ต้นทุนสินค้ารวม -> สีชมพูอมแดง (ตรงกับตาราง #f43f5e) */
-html.dark main div.grid > div:nth-child(2) span,
-html.dark main div.grid > div:nth-child(2) div,
-html.dark main div.grid > div:nth-child(2) p {
-    color: #f43f5e !important;
-}
-
-/* การ์ดที่ 3: ค่าจัดส่งรวม -> สีส้ม/เหลืองทอง (ตรงกับตาราง #f59e0b) */
-html.dark main div.grid > div:nth-child(3) span,
-html.dark main div.grid > div:nth-child(3) div,
-html.dark main div.grid > div:nth-child(3) p {
-    color: #f59e0b !important;
-}
-
-/* การ์ดที่ 4: กำไรสุทธิ (Net Profit) -> ปรับพื้นหลังเข้ม + ตัวอักษรสีเขียวสด */
-html.dark main div.grid > div:nth-child(4) {
-    background-color: #0a0f1d !important;
-    border: 2px solid #10b981 !important;
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.2) !important;
-}
-
-html.dark main div.grid > div:nth-child(4) span,
-html.dark main div.grid > div:nth-child(4) div,
-html.dark main div.grid > div:nth-child(4) p {
-    color: #10b981 !important;
-}
