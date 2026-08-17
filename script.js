@@ -888,24 +888,6 @@ function toggleVoiceRecognition() {
 
     recognition.start();
     // ใน script.js ตอนที่ยังไม่ได้ Login ให้สั่งเปิด switchPage('dashboard') เสมอ
-function handleLogout() {
-    localStorage.removeItem(DB_KEY_AUTH);
 
-    // 1. เปิด Login Modal แบบใส
-    const loginOverlay = document.getElementById('login-overlay');
-    if (loginOverlay) {
-        loginOverlay.classList.remove('hidden');
-    }
-
-    // 2. บังคับโชว์ Main Content ด้านหลังเพื่อให้เห็น Dashboard/ตาราง
-    const mainContent = document.getElementById('main-content');
-    if (mainContent) {
-        mainContent.classList.remove('hidden');
-    }
-
-    // 3. สั่งวาดหน้า Dashboard ออกมารอไว้ข้างหลัง Modal
-    if (typeof switchPage === 'function') {
-        switchPage('dashboard');
-    }
 }
 }
