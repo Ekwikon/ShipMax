@@ -159,7 +159,7 @@ async function handleLogin(e) {
     const loginBtn = document.querySelector('#login-box button[type="submit"]') || document.querySelector('#login-box button');
 
     if (loginBtn) {
-        loginBtn.innerText = "⏳ กำลังตรวจสอบ...";
+        loginBtn.innerText = "⏳ กำลังเข้าสู่ระบบ...";
         loginBtn.disabled = true;
     }
 
