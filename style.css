@@ -175,3 +175,42 @@ html.dark div:has(> button[class*="bg-emerald"]) > button:not([class*="bg-emeral
     background-color: #1e293b !important;
     border-color: #10b981 !important;
 }
+/* ==========================================
+   🎯 FIX: ซิงก์สีการ์ดสรุปบัญชีให้ตรงกับตาราง/กราฟ
+   ========================================== */
+
+/* 1. ยอดขายรวม (Revenue) - สีฟ้าสว่าง */
+html.dark div:has(> *:contains("ยอดขายรวม")) div:first-of-type,
+html.dark div:has(> *:contains("Revenue")) div:first-of-type,
+html.dark div:has(> *:contains("ยอดขายรวม")) span.text-2xl,
+html.dark div:has(> *:contains("ยอดขายรวม")) span.text-3xl {
+    color: #38bdf8 !important;
+}
+
+/* 2. ต้นทุนสินค้ารวม - สีชมพูอมแดง (ตรงกับตาราง #f43f5e) */
+html.dark div:has(> *:contains("ต้นทุนสินค้ารวม")) div:first-of-type,
+html.dark div:has(> *:contains("ต้นทุนสินค้า")) span.text-2xl,
+html.dark div:has(> *:contains("ต้นทุนสินค้า")) span.text-3xl {
+    color: #f43f5e !important;
+}
+
+/* 3. ค่าจัดส่งรวม - สีส้ม/เหลืองทอง (ตรงกับตาราง #f59e0b) */
+html.dark div:has(> *:contains("ค่าจัดส่งรวม")) div:first-of-type,
+html.dark div:has(> *:contains("ค่าจัดส่ง")) span.text-2xl,
+html.dark div:has(> *:contains("ค่าจัดส่ง")) span.text-3xl {
+    color: #f59e0b !important;
+}
+
+/* 4. กำไรสุทธิ (Net Profit) - เปลี่ยนตัวอักษรเป็นสีเขียวมินต์สว่างสดใส */
+html.dark div:has(> *:contains("กำไรสุทธิ")) *,
+html.dark div:has(> *:contains("Net Profit")) * {
+    color: #10b981 !important;
+}
+
+/* 5. ปรับการ์ดกำไรสุทธิให้อยู่ในโทนเข้มขอบเขียว (เนียนตาเข้าธีม Dark Mode) */
+html.dark div:has(> *:contains("กำไรสุทธิ")),
+html.dark div:has(> *:contains("Net Profit")) {
+    background-color: #0a0f1d !important;
+    border: 2px solid #10b981 !important;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.2) !important;
+}
