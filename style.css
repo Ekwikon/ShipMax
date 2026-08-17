@@ -175,4 +175,19 @@ html.dark div:has(> button[class*="bg-emerald"]) > button:not([class*="bg-emeral
     background-color: #1e293b !important;
     border-color: #10b981 !important;
 }
+/* ==========================================
+   🎯 FIX: เปลี่ยนโลโก้หน้า Login เป็น ShipMax2.png เฉพาะ Dark Mode
+   ========================================== */
 
+/* กรณี 1: หากโลโก้ใช้แท็ก <img> */
+html.dark form img[src*="ShipMax"],
+html.dark div:has(> form) img,
+html.dark [class*="login"] img {
+    content: url('ShipMax2.png') !important;
+}
+
+/* กรณี 2: หากโลโก้ใช้ background-image ใน <div> */
+html.dark form div[style*="background"],
+html.dark div:has(> form) div[class*="logo"] {
+    background-image: url('ShipMax2.png') !important;
+}
