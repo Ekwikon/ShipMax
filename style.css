@@ -1,17 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
 
 /* ==========================================
-   🌐 BASE CONFIG & FONTS
+   🌐 1. BASE CONFIG & LIGHT MODE (ค่าดั้งเดิม)
    ========================================== */
-*, html, body, button, input, select, textarea, span, p, h1, h2, h3, h4, h5, h6, a, div, li, td, th {
+*, html, body, button, input, select, textarea {
     font-family: 'Prompt', sans-serif !important;
 }
 
-body { 
-    font-family: 'Prompt', sans-serif; 
-}
-
-/* 🌐 พื้นหลังตาราง Grid แบบ Modern SaaS (Light Mode) */
 .grid-bg {
     background-color: #ffffff;
     background-image: 
@@ -29,11 +24,12 @@ body {
 ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
 ::-webkit-scrollbar-thumb:hover { background: #10b981; }
 
+
 /* ==========================================
-   🌙 DARK MODE COMPONENT STYLING
+   🌙 2. DARK MODE (เปลี่ยนแค่สีพื้นหลัง + อักษรดำเป็นขาว)
    ========================================== */
 
-/* 1. พื้นหลังหลักสีดำสนิท + ลาย Grid เขียว Neon */
+/* พื้นหลังมืดสนิท + ลาย Grid เขียวจาง */
 html.dark body, 
 html.dark #main-content, 
 html.dark main,
@@ -45,183 +41,55 @@ html.dark .grid-bg {
     background-size: 32px 32px !important;
 }
 
-/* 2. การ์ดและกล่ององค์ประกอบทั้งหมด */
+/* การ์ดและกล่องเป็นโทนเข้ม + ขอบเขียวนีออนจางๆ */
 html.dark .bg-white,
 html.dark [class*="bg-white"],
-html.dark div[class*="rounded"] {
+html.dark .card {
     background-color: #0a0f1d !important;
-    border: 1px solid rgba(16, 185, 129, 0.35) !important;
+    border: 1px solid rgba(16, 185, 129, 0.25) !important;
 }
 
-/* 3. ข้อความพื้นฐาน คมชัดอ่านง่าย */
-html.dark label,
-html.dark p,
-html.dark span,
-html.dark small,
-html.dark div {
-    color: #cbd5e1;
-}
-
-html.dark h1, html.dark h2, html.dark h3, html.dark h4, 
-html.dark strong, html.dark b {
+/* เปลี่ยนเฉพาะตัวอักษรสีดำ/มืด ให้กลายเป็นสีขาวสว่างอ่านง่าย */
+html.dark,
+html.dark body,
+html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark h6,
+html.dark p, html.dark label, html.dark strong, html.dark b,
+html.dark .text-slate-900, html.dark .text-slate-800, html.dark .text-slate-700,
+html.dark .text-gray-900, html.dark .text-gray-800, html.dark .text-gray-700,
+html.dark .text-black {
     color: #ffffff !important;
 }
 
-/* 4. ช่องกรอกข้อมูล (Input / Select / Textarea) */
-html.dark select,
-html.dark input[type="text"],
-html.dark input[type="number"],
-html.dark input[type="password"],
-html.dark textarea {
-    background-color: #121a2d !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(16, 185, 129, 0.4) !important;
-}
-
-html.dark input::placeholder,
-html.dark textarea::placeholder {
+/* ข้อความเทาปานกลางให้สว่างขึ้นเล็กน้อย */
+html.dark .text-slate-500, html.dark .text-slate-400,
+html.dark .text-gray-500, html.dark .text-gray-400 {
     color: #94a3b8 !important;
 }
 
-html.dark input:focus,
-html.dark textarea:focus,
-html.dark select:focus {
-    border-color: #10b981 !important;
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.4) !important;
-    outline: none !important;
-}
-
-/* 5. ปุ่มกดทั่วไป (Fix ปุ่มจมทุกหน้า) */
-html.dark button,
-html.dark a.btn,
-html.dark .btn {
-    color: #ffffff !important;
-}
-
-html.dark button.bg-white,
-html.dark button[class*="bg-white"],
-html.dark button:not([class*="bg-emerald"]):not([class*="bg-blue"]):not([class*="bg-indigo"]) {
+/* ช่องกรอกข้อมูล (Input / Select) */
+html.dark input, html.dark select, html.dark textarea {
     background-color: #121a2d !important;
-    border: 1px solid rgba(16, 185, 129, 0.4) !important;
-}
-
-html.dark button:hover {
-    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4) !important;
-}
-
-/* ==========================================
-   🎯 FIX: แก้ปัญหาตัวหนังสือจมรายจุด
-   ========================================== */
-
-html.dark .text-slate-900,
-html.dark .text-slate-800,
-html.dark .text-slate-700,
-html.dark .text-gray-900,
-html.dark .text-gray-800,
-html.dark .text-white {
     color: #ffffff !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
 }
 
-html.dark button[class*="fixed"],
-html.dark button[onclick*="gps"],
-html.dark button[onclick*="GPS"],
-html.dark a[href*="http"],
-html.dark .btn-secondary {
-    color: #ffffff !important;
-}
-
-html.dark button[class*="fixed"] *,
-html.dark button[onclick*="gps"] * {
-    color: #ffffff !important;
-}
-
-/* ==========================================
-   🎨 COLOR SPECIFICS: ต้นทุน / ค่าส่ง / กำไร
-   ========================================== */
-
-/* 🔴 1. ต้นทุน (Cost) - สีแดงเรืองแสง */
-html.dark .text-rose-500,
-html.dark .text-rose-400,
-html.dark .text-red-500,
-html.dark .text-red-400,
-html.dark .cost-text,
-html.dark #total-cost {
-    color: #f43f5e !important;
-    font-weight: 700 !important;
-    text-shadow: 0 0 8px rgba(244, 63, 94, 0.3);
-}
-
-/* 🟡 2. ค่าจัดส่ง (Shipping) - สีเหลือง/ส้มเรืองแสง */
-html.dark .text-amber-500,
-html.dark .text-amber-400,
-html.dark .text-orange-500,
-html.dark .text-orange-400,
-html.dark .ship-text,
-html.dark #total-shipping {
-    color: #fbbf24 !important;
-    font-weight: 700 !important;
-    text-shadow: 0 0 8px rgba(251, 191, 36, 0.3);
-}
-
-/* 🟢 3. กำไรสุทธิ (Net Profit) - สีเขียวนีออนเรืองแสง */
-html.dark .text-emerald-500,
-html.dark .text-emerald-400,
-html.dark .text-green-500,
-html.dark .text-green-400,
-html.dark .profit-text,
-html.dark #net-profit,
-html.dark #total-profit {
-    color: #10b981 !important;
-    font-weight: 700 !important;
-    text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
-}
-
-/* ==========================================
-   📊 TABLE STYLING
-   ========================================== */
-
-html.dark table {
-    border-collapse: collapse !important;
-    width: 100%;
-}
-
+/* ตารางข้อมูล */
 html.dark table thead th {
     background-color: #0e1726 !important;
-    color: #34d399 !important;
-    border-bottom: 2px solid rgba(16, 185, 129, 0.5) !important;
-    font-weight: 600 !important;
+    border-bottom: 2px solid rgba(16, 185, 129, 0.4) !important;
 }
-
 html.dark table td {
-    border-bottom: 1px solid rgba(16, 185, 129, 0.2) !important;
-    color: #f1f5f9 !important;
+    border-bottom: 1px solid rgba(16, 185, 129, 0.15) !important;
 }
 
-html.dark table tbody tr:hover {
-    background-color: rgba(16, 185, 129, 0.08) !important;
+/* ปุ่มทั่วไปที่ติดสีขาว ให้เป็นกรมเข้ม */
+html.dark button.bg-white,
+html.dark button[class*="bg-white"] {
+    background-color: #121a2d !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
 }
 
-/* ==========================================
-   ✨ TRANSITION & ANIMATION
-   ========================================== */
-
-html, body, main, div, table, tr, td, th, button, input, section, nav, header {
-    transition: background-color 0.35s ease, border-color 0.35s ease, color 0.25s ease, box-shadow 0.35s ease !important;
-}
-
-html.dark .bg-white,
-html.dark [class*="bg-white"],
-html.dark div[class*="rounded"] {
-    animation: neonGlow 4s infinite alternate ease-in-out;
-}
-
-@keyframes neonGlow {
-    0% {
-        border-color: rgba(16, 185, 129, 0.25) !important;
-        box-shadow: 0 0 8px rgba(16, 185, 129, 0.05);
-    }
-    100% {
-        border-color: rgba(16, 185, 129, 0.45) !important;
-        box-shadow: 0 0 16px rgba(16, 185, 129, 0.15);
-    }
+/* Transition เปลี่ยนธีมนุ่มนวล */
+html, body, main, div, table, tr, td, th, button, input {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease !important;
 }
