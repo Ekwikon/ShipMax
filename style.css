@@ -247,3 +247,38 @@ html.dark .text-emerald-500 {
     color: #34d399 !important; /* ตัวเลขสีเขียวนีออนคมชัด */
     font-weight: 700;
 }
+/* ==========================================
+   🔘 BUTTON TEXT & BUTTON STYLING FIXES
+   ========================================== */
+
+/* 1. ปุ่ม "เว็บไซต์หลัก" (สีเขียวนีออน ตัวอักษรขาว คมชัด) */
+html.dark a[href*="http"],
+html.dark .bg-emerald-500,
+html.dark .bg-emerald-600,
+html.dark [class*="bg-emerald"] button,
+html.dark a[class*="bg-emerald"] {
+    background-color: #10b981 !important; /* เขียวนีออนเด่นชัด */
+    color: #ffffff !important; /* ตัวอักษรสีขาวสว่าง */
+    font-weight: 600 !important;
+    border: none !important;
+}
+
+html.dark a[class*="bg-emerald"]:hover {
+    background-color: #059669 !important;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.6) !important;
+}
+
+/* 2. ปุ่ม "ตรวจสอบ" (สีกรมเข้ม ขอบเขียว ตัวอักษรขาวสว่าง) */
+html.dark button:not(.bg-emerald-500):not(#btn-mic) {
+    background-color: #121a2d !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(16, 185, 129, 0.5) !important;
+    font-weight: 500 !important;
+}
+
+/* 3. บังคับตัวอักษรและไอคอนภายในปุ่มทั้งหมดให้เป็นสีขาวสว่าง */
+html.dark button *, 
+html.dark a[class*="button"] *, 
+html.dark a[class*="btn"] * {
+    color: #ffffff !important;
+}
