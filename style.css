@@ -206,3 +206,40 @@ html.dark [class*="emerald"] span,
 #total-profit + span {
     color: #10b981 !important;
 }
+/* ==========================================
+   📦 TRACKING PAGE DARK MODE FIXES
+   ========================================== */
+
+/* 1. ปรับกล่องขาวหลักให้เป็นสีดำ slate-900 ขอบเขียวโปร่งแสง */
+html.dark .bg-white,
+html.dark div[class*="rounded"][class*="shadow"] {
+    background-color: #0b1120 !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+}
+
+/* 2. ปรับข้อความกำกับเหนือช่อง (1. เลือกบริษัทขนส่ง / 2. กรอกหมายเลขพัสดุ) ให้สว่างคมชัด */
+html.dark .text-slate-400,
+html.dark .text-gray-400,
+html.dark label,
+html.dark p span {
+    color: #cbd5e1 !important; /* สีเทาสว่าง อ่านง่ายสบายตา */
+    font-weight: 500;
+}
+
+/* 3. ปรับช่อง Select ขนส่ง และ Input กรอกเลขพัสดุ ให้กลมกลืน */
+html.dark select,
+html.dark input[type="text"] {
+    background-color: #1e293b !important; /* สีสว่างกว่าการ์ดเล็กน้อย ให้ดูมีมิติ */
+    color: #f8fafc !important;
+    border: 1px solid rgba(16, 185, 129, 0.4) !important;
+}
+
+/* ปรับสีตัวอักษรตัวอย่างในช่อง (เช่น TH012345678) */
+html.dark input::placeholder {
+    color: #64748b !important;
+}
+
+/* 4. ปรับปุ่ม "ตรวจสอบ" ให้มีขอบเขียวเรืองแสง เด่นชัดขึ้น */
+html.dark button:hover {
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4) !important;
+}
