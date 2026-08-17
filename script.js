@@ -978,3 +978,134 @@ function handlePrint() {
     // เรียกคำสั่งพิมพ์ของเบราว์เซอร์
     window.print();
 }
+function generateAndPrintLabel() {
+    // 1. ดึงข้อมูลจากช่องกรอกในหน้าเว็บ (ดึงค่า value จาก Input)
+    const inputs = document.querySelectorAll('input, select, textarea');
+    
+    // ค้นหาข้อมูลตามประเภทช่อง หรือใช้ Query Selector ตามโครงสร้างหน้า
+    let name = '', phone = '', address = '', subDistrict = '', district = '', province = '', zipcode = '';
+    
+    // ดึงข้อมูลจากช่องต่างๆ (ระบบจะดึงข้อมูลที่กรอกอยู่อัตโนมัติ)
+    const allInputs = Array.from(document.querySelectorAll('input'));
+    if(allInputs.length >= 6) {
+        name = allInputs[0].value || '-';
+        phone = allInputs[1].value || '-';
+        address = allInputs[2].value || '-';
+        subDistrict = allInputs[3].value || '-';
+        district = allInputs[4].value || '-';
+        province = allInputs[5].value || '-';
+        zipcode = allInputs[6]?.value || '';
+    }
+
+    // 2. ดึงชื่อขนส่งและราคาที่ AI คำนวณได้
+    const courierBox = document.querySelector('div:has(> *:contains("ขนส่งที่คุ้มที่สุด"))') || document.body;
+    const courierName = courierBox.innerText.includes('Flash') ? 'Flash Express' : 
+                        courierBox.innerText.includes('J&T') ? 'J&T Express' : 'ShipMax Express';
+
+    // 3. เปิดหน้าต่างใหม่เพื่อแสดงใบปะหน้าพัสดุ
+    const printWindow = window.open('', '_blank', 'width=600,height=800');
+    
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>ใบปะหน้าพัสดุ - ShipMax</title>
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap');
+                @page { size: A6 portrait; margin: 0; }
+                body { 
+                    font-family: 'Prompt', sans-serif; 
+                    margin: 0; 
+                    padding: 15px; 
+                    background: #fff; 
+                    color: #000;
+                    box-sizing: border-box;
+                }
+                .label-container {
+                    border: 2px solid #000;
+                    border-radius: 8px;
+                    padding: 12px;
+                    height: 95%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                }
+                .header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    border-bottom: 2px solid #000;
+                    padding-bottom: 8px;
+                }
+                .logo { font-size: 20px; font-weight: 700; }
+                .courier-badge {
+                    background: #000;
+                    color: #fff;
+                    padding: 4px 12px;
+                    font-weight: 600;
+                    border-radius: 4px;
+                    font-size: 14px;
+                }
+                .section { margin-top: 10px; }
+                .label-title { font-size: 11px; font-weight: 600; color: #444; text-transform: uppercase; }
+                .sender-info { font-size: 12px; line-height: 1.3; color: #333; }
+                .receiver-box {
+                    border: 1.5px solid #000;
+                    padding: 10px;
+                    border-radius: 6px;
+                    margin-top: 8px;
+                    background: #fafafa;
+                }
+                .receiver-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+                .receiver-address { font-size: 13px; line-height: 1.4; }
+                .zipcode {
+                    font-size: 26px;
+                    font-weight: 700;
+                    text-align: right;
+                    letter-spacing: 3px;
+                    margin-top: 8px;
+                    border-top: 1px dashed #ccc;
+                    padding-top: 4px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="label-container">
+                <div>
+                    <div class="header">
+                        <div class="logo">📦 ShipMax</div>
+                        <div class="courier-badge">${courierName}</div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="label-title">ผู้ส่ง (Sender)</div>
+                        <div class="sender-info">
+                            <strong>ร้านค้า ShipMax Online</strong><br>
+                            โทร. 081-234-5678<br>
+                            กทม. 10110
+                        </div>
+                    </div>
+
+                    <div class="receiver-box">
+                        <div class="label-title">ผู้รับ (Recipient)</div>
+                        <div class="receiver-name">${name} (${phone})</div>
+                        <div class="receiver-address">
+                            ${address}<br>
+                            ต.${subDistrict} อ.${district} จ.${province}
+                        </div>
+                        <div class="zipcode">${zipcode}</div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                window.onload = function() {
+                    window.print();
+                    setTimeout(function() { window.close(); }, 500);
+                };
+            <\/script>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+}
