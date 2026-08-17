@@ -1,241 +1,74 @@
 /* ==========================================
-   🌐 FONT IMPORT & GLOBAL SETUP
+   🟢 DARK EMERALD NEON THEME (ภาพสไตล์ HIWDO) + PROMPT FONT
    ========================================== */
+
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
 
+/* บังคับใช้ฟอนต์ Prompt ทุกองค์ประกอบในเว็บไซต์ */
 *, html, body, button, input, select, textarea, span, p, h1, h2, h3, h4, h5, h6, a, div, li, td, th {
     font-family: 'Prompt', sans-serif !important;
 }
 
-body { 
-    font-family: 'Prompt', sans-serif; 
-}
-
-/* 🌐 LIGHT MODE (พื้นหลังตาราง Grid แบบ Modern SaaS) */
-.grid-bg {
-    background-color: #ffffff;
-    background-image: 
-        radial-gradient(circle at 50% 30%, rgba(63, 244, 160, 0.05) 0%, transparent 60%),
-        linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
-    background-size: 100% 100%, 36px 36px, 36px 36px;
-    mask-image: radial-gradient(circle at center, black 50%, transparent 98%);
-    -webkit-mask-image: radial-gradient(circle at center, black 50%, transparent 98%);
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-::-webkit-scrollbar-track {
-    background: #0f172a;
-}
-::-webkit-scrollbar-thumb {
-    background: #1e293b;
-    border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: #10b981;
-}
-
-/* ==========================================
-   🌙 DARK MODE COMPONENT STYLING (ครอบคลุมทุกหน้า)
-   ========================================== */
-
-/* 1. พื้นหลังหลักสีดำสนิท + ลาย Grid เขียว Neon */
-html.dark body, 
-html.dark #main-content, 
-html.dark main,
-html.dark .grid-bg {
+/* 1. พื้นหลังมืดสนิท + ลาย Grid เขียวจาง */
+html.dark body,
+html.dark #main-content,
+html.dark main {
     background-color: #050811 !important;
     background-image: 
-        linear-gradient(to right, rgba(16, 185, 129, 0.08) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(16, 185, 129, 0.08) 1px, transparent 1px) !important;
+        linear-gradient(to right, rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(16, 185, 129, 0.05) 1px, transparent 1px) !important;
     background-size: 32px 32px !important;
+    color: #f8fafc !important;
 }
 
-/* 2. การ์ดพื้นฐาน / กล่องเนื้อหาทั่วไป (Default Black Card + Green Glow) */
+/* 2. การ์ดมนพื้นเข้ม ขอบเรืองแสงเขียวจางๆ */
 html.dark .bg-white,
-html.dark [class*="bg-white"] {
+html.dark [class*="bg-white"],
+html.dark .card,
+html.dark .rounded-2xl {
     background-color: #0a0f1d !important;
-    border: 1px solid rgba(16, 185, 129, 0.35);
+    border: 1px solid rgba(16, 185, 129, 0.25) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
 }
 
-/* 3. ข้อความ หัวข้อ และ Label ทั้งหมดในระบบ */
-html.dark label,
-html.dark p,
-html.dark span,
-html.dark .text-slate-400,
-html.dark .text-slate-500,
-html.dark .text-slate-600,
-html.dark .text-gray-400,
-html.dark .text-gray-500 {
-    color: #cbd5e1 !important; /* เทาสว่าง อ่านชัด ไม่ปวดตา */
-}
-
-html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark h6,
-html.dark strong, html.dark b {
+/* 3. ไอคอนกล่องสี่เหลี่ยมมน + ปุ่มหลัก (เขียวนีออนเรืองแสง) */
+html.dark .bg-emerald-500,
+html.dark .bg-emerald-600,
+html.dark button.btn-primary,
+html.dark .btn-neon {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
     color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4) !important;
 }
 
-/* 4. กล่องกรอกข้อมูล (Input / Select / Textarea / Modal) */
+/* 4. ช่องกรอกข้อมูล (Input / Textarea / Select) โทนมืด */
+html.dark input,
 html.dark select,
-html.dark input[type="text"],
-html.dark input[type="number"],
-html.dark input[type="password"],
-html.dark input[type="date"],
 html.dark textarea {
     background-color: #121a2d !important;
     color: #ffffff !important;
-    border: 1px solid rgba(16, 185, 129, 0.4) !important;
-}
-
-html.dark input::placeholder,
-html.dark textarea::placeholder {
-    color: #64748b !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+    border-radius: 0.75rem !important;
 }
 
 html.dark input:focus,
-html.dark textarea:focus,
-html.dark select:focus {
+html.dark textarea:focus {
     border-color: #10b981 !important;
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.4) !important;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3) !important;
     outline: none !important;
 }
 
-/* 5. ตารางข้อมูลทุกหน้า (Table, Head, Body, Hover) */
-html.dark table {
-    border-collapse: collapse !important;
-}
-
-html.dark table thead,
-html.dark table thead tr,
-html.dark table th {
-    background-color: #0e1726 !important;
-    color: #34d399 !important; /* เขียวนีออนสว่าง */
-    border-bottom: 2px solid rgba(16, 185, 129, 0.5) !important;
-    font-weight: 600 !important;
-}
-
-html.dark table td {
-    border-bottom: 1px solid rgba(16, 185, 129, 0.15) !important;
-    color: #f1f5f9 !important;
-}
-
-html.dark table tbody tr:hover {
-    background-color: rgba(16, 185, 129, 0.08) !important;
-}
-
-/* ==========================================
-   🔘 BUTTON TEXT & BUTTON STYLING FIXES
-   ========================================== */
-
-/* 1. ปุ่ม "เว็บไซต์หลัก" (สีเขียวนีออน ตัวอักษรขาว คมชัด) */
-html.dark a[href*="http"],
-html.dark .bg-emerald-500,
-html.dark .bg-emerald-600,
-html.dark [class*="bg-emerald"] button,
-html.dark a[class*="bg-emerald"] {
-    background-color: #10b981 !important; /* เขียวนีออนเด่นชัด */
-    color: #ffffff !important; /* ตัวอักษรสีขาวสว่าง */
-    font-weight: 600 !important;
-    border: none !important;
-}
-
-html.dark a[class*="bg-emerald"]:hover {
-    background-color: #059669 !important;
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.6) !important;
-}
-
-/* 2. ปุ่ม "ตรวจสอบ" (สีกรมเข้ม ขอบเขียว ตัวอักษรขาวสว่าง) */
-html.dark button:not(.bg-emerald-500):not(#btn-mic) {
-    background-color: #121a2d !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(16, 185, 129, 0.5) !important;
-    font-weight: 500 !important;
-}
-
-/* 3. บังคับตัวอักษรและไอคอนภายในปุ่มทั้งหมดให้เป็นสีขาวสว่าง */
-html.dark button *, 
-html.dark a[class*="button"] *, 
-html.dark a[class*="btn"] * {
+/* 5. ข้อความสว่าง คมชัด ไม่กลืนกับพื้นหลัง */
+html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark strong {
     color: #ffffff !important;
 }
 
-/* ==========================================
-   🎨 NEON STAT CARDS (การ์ดสรุปบัญชีแยกสี 4 ช่อง)
-   ========================================== */
-
-/* 1. ยอดขายรวม (Revenue) - สีดำขอบเขียว */
-html.dark div:has(> #total-revenue),
-html.dark div:has(> .text-emerald-500) {
-    border: 1px solid rgba(16, 185, 129, 0.5) !important;
-    background-color: rgba(16, 185, 129, 0.04) !important;
+html.dark p, html.dark span, html.dark label, html.dark li {
+    color: #cbd5e1 !important;
 }
 
-/* 2. ต้นทุนสินค้ารวม - สีดำขอบชมพู/แดง */
-html.dark div:has(> #total-cost),
-html.dark [class*="border-rose"],
-html.dark [class*="border-red"] {
-    border: 1px solid rgba(244, 63, 94, 0.6) !important;
-    background-color: rgba(244, 63, 94, 0.04) !important;
-}
-html.dark #total-cost,
-html.dark .text-rose-500,
-html.dark .text-red-500,
-html.dark .text-rose-600 {
-    color: #fb7185 !important;
-    font-weight: 700 !important;
-}
-
-/* 3. ค่าจัดส่งรวม - สีดำขอบส้ม/เหลือง */
-html.dark div:has(> #total-shipping),
-html.dark [class*="border-amber"],
-html.dark [class*="border-orange"] {
-    border: 1px solid rgba(245, 158, 11, 0.6) !important;
-    background-color: rgba(245, 158, 11, 0.04) !important;
-}
-html.dark #total-shipping,
-html.dark .text-amber-500,
-html.dark .text-orange-500,
-html.dark .text-amber-600 {
-    color: #fbbf24 !important;
-    font-weight: 700 !important;
-}
-
-/* 4. กำไรสุทธิ (Net Profit) - สีดำไฮไลต์เขียวมรกตเรืองแสง */
-html.dark div:has(> #net-profit),
-html.dark .bg-emerald-50,
-html.dark [class*="bg-emerald"] {
-    border: 1px solid rgba(52, 211, 153, 0.8) !important;
-    background-color: rgba(16, 185, 129, 0.08) !important;
-    box-shadow: 0 0 16px rgba(16, 185, 129, 0.15) !important;
-}
-html.dark #net-profit,
-html.dark .text-emerald-600 {
+html.dark .text-emerald-500,
+html.dark .text-emerald-400 {
     color: #34d399 !important;
-    font-weight: 700 !important;
-    text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
-}
-
-/* ==========================================
-   ✨ TRANSITIONS & ANIMATION
-   ========================================== */
-html, body, main, div, table, tr, td, th, button, input, section, nav, header {
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease, box-shadow 0.3s ease !important;
-}
-
-#theme-toggle-dark-icon, 
-#theme-toggle-light-icon {
-    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
-}
-
-html.dark #theme-toggle-light-icon {
-    animation: rotateSun 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes rotateSun {
-    from { transform: rotate(-90deg) scale(0.5); opacity: 0; }
-    to { transform: rotate(0deg) scale(1); opacity: 1; }
 }
