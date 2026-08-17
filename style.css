@@ -33,7 +33,7 @@ body {
 }
 
 /* ==========================================
-   🌙 DARK MODE COMPONENT STYLING (ปรับใหม่)
+   🌙 DARK MODE COMPONENT STYLING (ปรับปรุงให้อ่านง่ายขึ้น)
    ========================================== */
 
 /* 1. พื้นหลังหลักสีดำสนิท + ลาย Grid เขียว Neon */
@@ -41,68 +41,122 @@ html.dark body,
 html.dark #main-content, 
 html.dark main,
 html.dark .grid-bg {
-    background-color: #050811 !important; /* ดำสนิท */
+    background-color: #050811 !important;
     background-image: 
-        linear-gradient(to right, rgba(16, 185, 129, 0.07) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(16, 185, 129, 0.07) 1px, transparent 1px) !important;
+        linear-gradient(to right, rgba(16, 185, 129, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(16, 185, 129, 0.08) 1px, transparent 1px) !important;
     background-size: 32px 32px !important;
 }
 
-/* 2. การ์ดและกล่องตาราง (ทับ background เดิม ปรับขอบเขียวเรืองแสง) */
+/* 2. การ์ดและกล่องตาราง (ปรับพื้นหลังให้มืดลึกเพื่อขับตัวอักษร) */
 html.dark .bg-white,
 html.dark [class*="bg-white"] {
-    background-color: #0b1120 !important;
-    border: 1px solid rgba(16, 185, 129, 0.3) !important;
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.05);
+    background-color: #0a0f1d !important;
+    border: 1px solid rgba(16, 185, 129, 0.35) !important;
 }
 
-/* 3. แก้ปัญหาหัวตาราง (TH/THEAD) เป็นแถบขาว */
-html.dark table thead,
-html.dark table thead tr,
-html.dark table th {
-    background-color: #070d19 !important;
-    color: #10b981 !important; /* ข้อความหัวตารางสีเขียว */
-    border-bottom: 2px solid rgba(16, 185, 129, 0.5) !important;
-}
-
-/* 4. เส้นกั้นตารางแนวนอนสีเขียว + ตัวหนังสือสว่าง */
+/* 3. ตารางข้อมูล (Table Header & Cell Fixes) */
 html.dark table {
     border-collapse: collapse !important;
 }
 
+html.dark table thead,
+html.dark table thead tr,
+html.dark table th {
+    background-color: #0e1726 !important;
+    color: #34d399 !important; /* เขียว Neon สว่าง */
+    border-bottom: 2px solid rgba(16, 185, 129, 0.5) !important;
+    font-weight: 600 !important;
+}
+
 html.dark table td {
-    border-bottom: 1px solid rgba(16, 185, 129, 0.25) !important;
-    color: #f8fafc !important;
+    border-bottom: 1px solid rgba(16, 185, 129, 0.2) !important;
+    color: #f1f5f9 !important; /* ตัวหนังสือขาว คมชัด */
 }
 
-/* 5. เอฟเฟกต์ Hover แถวตาราง เรืองแสงเขียว Neon */
 html.dark table tbody tr:hover {
-    background-color: rgba(16, 185, 129, 0.12) !important;
+    background-color: rgba(16, 185, 129, 0.1) !important;
 }
 
-/* 6. แก้ไขสีข้อความส่วนหัวของการ์ดที่มองไม่เห็น */
-html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark span {
-    color: #f8fafc;
+/* 4. แก้ปัญหากล่องกรอกข้อมูล (Input / Textarea / Select) */
+html.dark input[type="text"],
+html.dark input[type="number"],
+html.dark input[type="password"],
+html.dark textarea,
+html.dark select {
+    background-color: #121a2d !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(16, 185, 129, 0.4) !important;
 }
-html.dark .text-slate-400, html.dark .text-slate-500 {
-    color: #94a3b8 !important;
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+    color: #64748b !important;
 }
+
+html.dark input:focus,
+html.dark textarea:focus,
+html.dark select:focus {
+    border-color: #10b981 !important;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.4) !important;
+    outline: none !important;
+}
+
+/* 5. ปรับตัวหนังสือ Label และรายละเอียดในทุกหน้าให้สว่าง อ่านง่าย */
+html.dark label,
+html.dark p,
+html.dark .text-slate-400,
+html.dark .text-slate-500,
+html.dark .text-slate-600,
+html.dark .text-gray-400,
+html.dark .text-gray-500 {
+    color: #cbd5e1 !important; /* เทาสว่าง slate-300 อ่านสบายตา */
+}
+
+html.dark h1, html.dark h2, html.dark h3, html.dark h4, 
+html.dark strong, html.dark b {
+    color: #ffffff !important;
+}
+
+/* 6. แก้ไขปุ่มกดที่ยังเป็นสีขาวหลุดธีม (เช่น ปุ่มรีเฟรช / ปุ่มยกเลิก) */
+html.dark button.bg-white,
+html.dark button[class*="bg-white"],
+html.dark .bg-white button {
+    background-color: #121a2d !important;
+    color: #34d399 !important;
+    border: 1px solid rgba(16, 185, 129, 0.4) !important;
+}
+
+html.dark button.bg-white:hover {
+    background-color: rgba(16, 185, 129, 0.2) !important;
+    color: #ffffff !important;
+}
+
+/* 7. 💚 ปรับตัวเลขกำไรสุทธิ (Net Profit) ให้เป็นสีเขียวเนียนตาคมชัด */
+html.dark #net-profit,
+html.dark #total-profit,
+html.dark .text-emerald-500,
+html.dark .text-emerald-600 {
+    color: #10b981 !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+}
+
 /* ==========================================
    ✨ TRANSITION & ANIMATION EFFECTS
    ========================================== */
 
-/* 1. สลับสีพื้นหลังและสีตัวอักษรแบบนุ่มนวล (Smooth Fade) */
+/* แอนิเมชันเปลี่ยนโหมดอย่างนุ่มนวล */
 html, body, main, div, table, tr, td, th, button, input, section, nav, header {
-    transition: background-color 0.4s ease, border-color 0.4s ease, color 0.3s ease, box-shadow 0.4s ease !important;
+    transition: background-color 0.35s ease, border-color 0.35s ease, color 0.25s ease, box-shadow 0.35s ease !important;
 }
 
-/* 2. แอนิเมชันปุ่มสลับธีม (Theme Toggle Button) หมุนเรืองแสงตอนกด */
+/* ไอคอนหมุนเมื่อเปลี่ยนธีม */
 #theme-toggle-dark-icon, 
 #theme-toggle-light-icon {
     transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
 }
 
-/* เมื่อสลับโหมด ให้ไอคอนมีเอฟเฟกต์หมุน 360 องศาเล็กน้อย */
 html.dark #theme-toggle-light-icon {
     animation: rotateSun 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -118,7 +172,7 @@ html.dark #theme-toggle-light-icon {
     }
 }
 
-/* 3. เพิ่มเอฟเฟกต์ Pulse เรืองแสงวิบวับเบาๆ ที่เส้นขอบการ์ดใน Dark Mode */
+/* ขอบการ์ดเรืองแสงแบบคลื่นวิบวับเบาๆ */
 html.dark .bg-white,
 html.dark [class*="bg-white"] {
     animation: neonGlow 4s infinite alternate ease-in-out;
@@ -133,113 +187,4 @@ html.dark [class*="bg-white"] {
         border-color: rgba(16, 185, 129, 0.45) !important;
         box-shadow: 0 0 16px rgba(16, 185, 129, 0.15);
     }
-}
-/* ==========================================
-   👁️ IMPROVED READABILITY (อ่านง่าย คอนทราสต์สูง)
-   ========================================== */
-
-/* 1. ปรับข้อความหัวข้อ และ Label ทั้งหมดให้เป็นสีขาวสว่างคมชัด */
-html.dark label,
-html.dark .text-slate-400,
-html.dark .text-slate-500,
-html.dark .text-slate-600,
-html.dark span {
-    color: #cbd5e1 !important; /* สีเทาสว่าง slate-300 อ่านง่ายมาก */
-}
-
-/* 2. หัวข้อใหญ่และข้อความสำคัญให้สว่างชัดเจน */
-html.dark h1, html.dark h2, html.dark h3, html.dark h4, 
-html.dark strong, html.dark b {
-    color: #ffffff !important;
-}
-
-/* 3. ปรับช่องกรอกข้อมูล (Input / Textarea) ไม่ให้ขาวจ้าจนแสบตา */
-html.dark input[type="text"],
-html.dark input[type="number"],
-html.dark input[type="password"],
-html.dark textarea,
-html.dark select {
-    background-color: #1e293b !important; /* สีกรมเข้ม slate-800 สบายตา */
-    color: #f8fafc !important; /* ตัวอักษรสีขาวสว่าง */
-    border: 1px solid rgba(16, 185, 129, 0.4) !important; /* ขอบเขียวโปร่งแสง */
-}
-
-/* ปรับสีข้อความกำกับในช่อง (Placeholder) ให้เห็นชัดเจนขึ้น */
-html.dark input::placeholder,
-html.dark textarea::placeholder {
-    color: #64748b !important;
-}
-
-/* เมื่อคลิกที่ช่องกรอกข้อมูล ให้ขอบเรืองแสงเขียวชัดเจน */
-html.dark input:focus,
-html.dark textarea:focus {
-    border-color: #10b981 !important;
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3) !important;
-    outline: none !important;
-}
-
-/* 4. ปรับกล่องผลลัพธ์ AI (กล่องสีเหลืองอ่อนเดิม) ให้กลมกลืนกับ Dark Mode */
-html.dark [class*="bg-amber-"],
-html.dark [class*="bg-yellow-"],
-html.dark [class*="bg-orange-"] {
-    background-color: rgba(245, 158, 11, 0.1) !important; /* สีส้มทองโปร่งแสง */
-    border: 1px solid rgba(245, 158, 11, 0.4) !important;
-    color: #fbbf24 !important;
-}
-
-/* 5. ปรับปุ่มกดให้อ่านง่าย ตัวอักษรชัดเจน */
-html.dark button:not(.bg-emerald-500):not(#btn-mic) {
-    color: #f8fafc !important;
-}
-/* 💚 บังคับสีตัวเลขกำไรสุทธิให้เป็นเขียวเข้ม เด่นชัด */
-html.dark .text-emerald-500,
-html.dark .text-emerald-600,
-html.dark [class*="emerald"] span,
-#net-profit, 
-#total-profit {
-    color: #059669 !important; /* สีเขียว Emerald เข้มข้น */
-    font-weight: 700 !important;
-}
-
-/* ปรับสีคำว่า "บาท" ข้างๆ ตัวเลขให้เห็นชัดขึ้นด้วย */
-#net-profit + span, 
-#total-profit + span {
-    color: #10b981 !important;
-}
-/* ==========================================
-   📦 TRACKING PAGE DARK MODE FIXES
-   ========================================== */
-
-/* 1. ปรับกล่องขาวหลักให้เป็นสีดำ slate-900 ขอบเขียวโปร่งแสง */
-html.dark .bg-white,
-html.dark div[class*="rounded"][class*="shadow"] {
-    background-color: #0b1120 !important;
-    border: 1px solid rgba(16, 185, 129, 0.3) !important;
-}
-
-/* 2. ปรับข้อความกำกับเหนือช่อง (1. เลือกบริษัทขนส่ง / 2. กรอกหมายเลขพัสดุ) ให้สว่างคมชัด */
-html.dark .text-slate-400,
-html.dark .text-grey-400,
-html.dark label,
-html.dark p span {
-    color: #cbd5e1 !important; /* สีเทาสว่าง อ่านง่ายสบายตา */
-    font-weight: 500;
-}
-
-/* 3. ปรับช่อง Select ขนส่ง และ Input กรอกเลขพัสดุ ให้กลมกลืน */
-html.dark select,
-html.dark input[type="text"] {
-    background-color: #1e293b !important; /* สีสว่างกว่าการ์ดเล็กน้อย ให้ดูมีมิติ */
-    color: #f8fafc !important;
-    border: 1px solid rgba(16, 185, 129, 0.4) !important;
-}
-
-/* ปรับสีตัวอักษรตัวอย่างในช่อง (เช่น TH012345678) */
-html.dark input::placeholder {
-    color: #64748b !important;
-}
-
-/* 4. ปรับปุ่ม "ตรวจสอบ" ให้มีขอบเขียวเรืองแสง เด่นชัดขึ้น */
-html.dark button:hover {
-    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4) !important;
 }
