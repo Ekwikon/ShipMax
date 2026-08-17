@@ -978,107 +978,152 @@ function handlePrint() {
     // เรียกคำสั่งพิมพ์ของเบราว์เซอร์
     window.print();
 }
-function generateAndPrintLabel() {
+async function printLabel() {
+    // 1. ดึงข้อมูลจาก Element ID ตามโค้ดเดิมของคุณ
+    const name = document.getElementById('out-name')?.value || document.getElementById('out-name')?.innerText || '';
+    const courier = document.getElementById('out-courier')?.innerText || '-';
+    const shippingPrice = parseFloat(document.getElementById('out-price')?.innerText) || 0;
+    const sellingPrice = parseFloat(document.getElementById('selling-price-input')?.value) || 0;
+    const productCost = parseFloat(document.getElementById('product-cost-input')?.value) || 0;
+
+    // เช็กเงื่อนไขตามโค้ดเดิม
+    if (!name || courier === '-' || courier === '') { 
+        alert("กรุณาให้ AI สกัดที่อยู่ให้สำเร็จก่อนสั่งพิมพ์ครับ"); 
+        return; 
+    }
+
+    // คำนวณกำไรสุทธิ
+    const netProfit = sellingPrice - productCost - shippingPrice;
+    const margin = sellingPrice > 0 ? ((netProfit / sellingPrice) * 100).toFixed(1) : 0;
+
+    // เตรียมวัตถุข้อมูล orderData
+    const orderData = {
+        type: 'order',
+        id: Date.now(),
+        name: name,
+        courier: courier,
+        sellingPrice: sellingPrice,
+        productCost: productCost,
+        shippingPrice: shippingPrice,
+        netProfit: netProfit,
+        margin: margin
+    };
+
+    // เปลี่ยนสถานะปุ่มกด
+    const printBtn = document.getElementById('btn-print-save') || document.activeElement;
+    const originalBtnText = printBtn ? printBtn.innerHTML : "🖨️ พิมพ์ใบปะหน้า + บันทึกบัญชี";
+    if (printBtn) {
+        printBtn.innerHTML = "⏳ กำลังบันทึกลง Google Sheet...";
+        printBtn.disabled = true;
+    }
+
+    // 2. ส่งข้อมูลไป Google Sheets (ตามโค้ดเดิม)
     try {
-        // 🟢 1. เรียกใช้ฟังก์ชันบันทึกข้อมูลเดิมของระบบก่อน (ใส่ชื่อฟังก์ชันบันทึกของคุณตรงนี้)
-        if (typeof saveTransaction === 'function') {
-            saveTransaction(); // หรือเปลี่ยนเป็นชื่อฟังก์ชันบันทึกข้อมูลของคุณ
-        } else if (typeof saveData === 'function') {
-            saveData();
+        if (typeof GOOGLE_SCRIPT_URL !== 'undefined' && GOOGLE_SCRIPT_URL) {
+            await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            });
         }
-        // 1. ดึงช่อง Input ทั้งหมดที่อยู่ในกล่อง "ผลลัพธ์จากการวิเคราะห์"
-        const resultInputs = document.querySelectorAll('div:has(> button) input, input');
-        
-        // อ่านค่าตามลำดับช่องที่เห็นในรูปหน้าจอเป๊ะๆ
-        // ช่อง 1: ชื่อผู้รับ, ช่อง 2: เบอร์โทร, ช่อง 3: ที่อยู่หลัก
-        // ช่อง 4: ตำบล, ช่อง 5: อำเภอ, ช่อง 6: จังหวัด, ช่อง 7: รหัสไปรษณีย์
-        let name = '-', phone = '-', address = '-', subDistrict = '-', district = '-', province = '-', zipcode = '-';
+    } catch (err) {
+        console.error("ส่ง Google Sheet ไม่สำเร็จ บันทึกลงเครื่องแทน:", err);
+    }
 
-        // วนหาค่าจาก Input ที่มีอยู่ในหน้าเว็บ
-        const inputs = Array.from(document.querySelectorAll('input')).filter(i => i.type !== 'hidden');
-        
-        // ดึงข้อมูล 7 ช่องล่างสุด (โซนผลลัพธ์)
-        if (inputs.length >= 7) {
-            const resultGroup = inputs.slice(-7);
-            name = resultGroup[0]?.value || '-';
-            phone = resultGroup[1]?.value || '-';
-            address = resultGroup[2]?.value || '-';
-            subDistrict = resultGroup[3]?.value || '-';
-            district = resultGroup[4]?.value || '-';
-            province = resultGroup[5]?.value || '-';
-            zipcode = resultGroup[6]?.value || '-';
-        }
+    // 3. บันทึกลง LocalStorage และอัปเดต Dashboard (ตามโค้ดเดิม)
+    if (typeof ordersList !== 'undefined') ordersList.push(orderData);
+    if (typeof currentStock !== 'undefined') currentStock -= 1;
 
-        // ดึงชื่อขนส่ง
-        const courierBadge = document.body.innerText.includes('Flash Express') ? 'Flash Express' : 
-                             document.body.innerText.includes('J&T') ? 'J&T Express' : 'ShipMax Express';
+    if (typeof DB_KEY_ORDERS !== 'undefined' && typeof ordersList !== 'undefined') {
+        localStorage.setItem(DB_KEY_ORDERS, JSON.stringify(ordersList));
+    }
+    if (typeof DB_KEY_STOCK !== 'undefined' && typeof currentStock !== 'undefined') {
+        localStorage.setItem(DB_KEY_STOCK, currentStock.toString());
+    }
 
-        // 2. เปิดหน้าต่างใหม่เพื่อแสดงใบปะหน้า
-        const printWindow = window.open('', '_blank', 'width=650,height=850');
-        if (!printWindow) {
-            alert('กรุณาเปิดอนุญาต Pop-up บนเบราว์เซอร์เพื่อพิมพ์ใบปะหน้า');
-            return;
-        }
+    if (typeof loadDashboardAndFinanceData === 'function') {
+        loadDashboardAndFinanceData();
+    }
 
-        printWindow.document.write(`
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>ใบปะหน้าพัสดุ - ShipMax</title>
-                <style>
-                    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap');
-                    @page { size: A6 portrait; margin: 0; }
-                    body { font-family: 'Prompt', sans-serif; margin: 0; padding: 15px; background: #fff; color: #000; box-sizing: border-box; }
-                    .label-container { border: 2px solid #000; border-radius: 8px; padding: 15px; height: 95%; display: flex; flex-direction: column; justify-content: space-between; }
-                    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 8px; }
-                    .logo { font-size: 20px; font-weight: 700; }
-                    .courier-badge { background: #000; color: #fff; padding: 4px 10px; font-weight: 600; border-radius: 4px; font-size: 13px; }
-                    .section { margin-top: 10px; }
-                    .label-title { font-size: 11px; font-weight: 600; color: #555; text-transform: uppercase; }
-                    .sender-info { font-size: 12px; line-height: 1.4; color: #333; }
-                    .receiver-box { border: 1.5px solid #000; padding: 12px; border-radius: 6px; margin-top: 10px; background: #fafafa; }
-                    .receiver-name { font-size: 16px; font-weight: 700; }
-                    .receiver-address { font-size: 13px; line-height: 1.5; margin-top: 6px; }
-                    .zipcode { font-size: 26px; font-weight: 700; text-align: right; letter-spacing: 3px; margin-top: 10px; border-top: 1px dashed #ccc; padding-top: 6px; }
-                </style>
-            </head>
-            <body>
-                <div class="label-container">
-                    <div>
-                        <div class="header">
-                            <div class="logo">📦 ShipMax</div>
-                            <div class="courier-badge">${courierBadge}</div>
-                        </div>
-                        <div class="section">
-                            <div class="label-title">ผู้ส่ง (Sender)</div>
-                            <div class="sender-info">
-                                <strong>ร้านค้า ShipMax Online</strong><br>
-                                โทร. 081-234-5678
-                            </div>
-                        </div>
-                        <div class="receiver-box">
-                            <div class="label-title">ผู้รับ (Recipient)</div>
-                            <div class="receiver-name">${name} (${phone})</div>
-                            <div class="receiver-address">
-                                ${address}<br>
-                                ต.${subDistrict} อ.${district} จ.${province}
-                            </div>
-                            <div class="zipcode">${zipcode}</div>
+    // คืนค่าปุ่มกดกลับมาปกติ
+    if (printBtn) {
+        printBtn.innerHTML = originalBtnText;
+        printBtn.disabled = false;
+    }
+
+    // -------------------------------------------------------------
+    // 4. ส่วนที่เพิ่มใหม่: ดึงข้อมูลที่อยู่ย่อย แล้วสั่งพิมพ์ใบปะหน้า A6
+    // -------------------------------------------------------------
+    const phone = document.getElementById('out-phone')?.value || document.getElementById('out-phone')?.innerText || '-';
+    const address = document.getElementById('out-address')?.value || document.getElementById('out-address')?.innerText || '-';
+    const subDistrict = document.getElementById('out-subdistrict')?.value || document.getElementById('out-subdistrict')?.innerText || '-';
+    const district = document.getElementById('out-district')?.value || document.getElementById('out-district')?.innerText || '-';
+    const province = document.getElementById('out-province')?.value || document.getElementById('out-province')?.innerText || '-';
+    const zipcode = document.getElementById('out-zipcode')?.value || document.getElementById('out-zipcode')?.innerText || '-';
+
+    const printWindow = window.open('', '_blank', 'width=650,height=850');
+    if (!printWindow) {
+        alert(`📊 บันทึกบัญชีเรียบร้อย! (ยอดขาย: ${sellingPrice} บ. | กำไร: ${netProfit} บ.)\n⚠️ แต่เบราว์เซอร์บล็อก Pop-up กรุณาเปิดอนุญาต Pop-up เพื่อสั่งพิมพ์ใบปะหน้าครับ`);
+        return;
+    }
+
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>ใบปะหน้าพัสดุ - ShipMax</title>
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap');
+                @page { size: A6 portrait; margin: 0; }
+                body { font-family: 'Prompt', sans-serif; margin: 0; padding: 15px; background: #fff; color: #000; box-sizing: border-box; }
+                .label-container { border: 2px solid #000; border-radius: 8px; padding: 15px; height: 95%; display: flex; flex-direction: column; justify-content: space-between; }
+                .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 8px; }
+                .logo { font-size: 20px; font-weight: 700; }
+                .courier-badge { background: #000; color: #fff; padding: 4px 10px; font-weight: 600; border-radius: 4px; font-size: 13px; }
+                .section { margin-top: 10px; }
+                .label-title { font-size: 11px; font-weight: 600; color: #555; text-transform: uppercase; }
+                .sender-info { font-size: 12px; line-height: 1.4; color: #333; }
+                .receiver-box { border: 1.5px solid #000; padding: 12px; border-radius: 6px; margin-top: 10px; background: #fafafa; }
+                .receiver-name { font-size: 16px; font-weight: 700; }
+                .receiver-address { font-size: 13px; line-height: 1.5; margin-top: 6px; }
+                .zipcode { font-size: 26px; font-weight: 700; text-align: right; letter-spacing: 3px; margin-top: 10px; border-top: 1px dashed #ccc; padding-top: 6px; }
+            </style>
+        </head>
+        <body>
+            <div class="label-container">
+                <div>
+                    <div class="header">
+                        <div class="logo">📦 ShipMax</div>
+                        <div class="courier-badge">${courier}</div>
+                    </div>
+                    <div class="section">
+                        <div class="label-title">ผู้ส่ง (Sender)</div>
+                        <div class="sender-info">
+                            <strong>ร้านค้า ShipMax Online</strong><br>
+                            โทร. 081-234-5678
                         </div>
                     </div>
+                    <div class="receiver-box">
+                        <div class="label-title">ผู้รับ (Recipient)</div>
+                        <div class="receiver-name">${name} (${phone})</div>
+                        <div class="receiver-address">
+                            ${address}<br>
+                            ต.${subDistrict} อ.${district} จ.${province}
+                        </div>
+                        <div class="zipcode">${zipcode}</div>
+                    </div>
                 </div>
-                <script>
-                    window.onload = function() {
-                        window.print();
-                        setTimeout(function() { window.close(); }, 500);
-                    };
-                <\/script>
-            </body>
-            </html>
-        `);
-        printWindow.document.close();
-    } catch (e) {
-        alert('เกิดข้อผิดพลาดในการดึงข้อมูล: ' + e.message);
-    }
+            </div>
+            <script>
+                window.onload = function() {
+                    window.print();
+                    setTimeout(function() { window.close(); }, 500);
+                };
+            <\/script>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
 }
-
+}
