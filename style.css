@@ -60,3 +60,7 @@ html.dark table td {
 html.dark table tbody tr:hover {
     background-color: rgba(16, 185, 129, 0.08) !important;
 }
+html.dark body {
+    background-image: radial-gradient(rgba(16, 185, 129, 0.15) 1px, transparent 0) !important;
+    background-size: 24px 24px !important;
+}
