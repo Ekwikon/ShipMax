@@ -219,7 +219,7 @@ html.dark div[class*="rounded"][class*="shadow"] {
 
 /* 2. ปรับข้อความกำกับเหนือช่อง (1. เลือกบริษัทขนส่ง / 2. กรอกหมายเลขพัสดุ) ให้สว่างคมชัด */
 html.dark .text-slate-400,
-html.dark .text-green-400,
+html.dark .text-grey-400,
 html.dark label,
 html.dark p span {
     color: #cbd5e1 !important; /* สีเทาสว่าง อ่านง่ายสบายตา */
