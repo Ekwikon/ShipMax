@@ -251,17 +251,7 @@ html.dark .text-emerald-500 {
    🔘 BUTTON TEXT & BUTTON STYLING FIXES
    ========================================== */
 
-/* 1. ปุ่ม "เว็บไซต์หลัก" (สีเขียวนีออน ตัวอักษรขาว คมชัด) */
-html.dark a[href*="http"],
-html.dark .bg-emerald-500,
-html.dark .bg-emerald-600,
-html.dark [class*="bg-emerald"] button,
-html.dark a[class*="bg-emerald"] {
-    background-color: #10b981 !important; /* เขียวนีออนเด่นชัด */
-    color: #ffffff !important; /* ตัวอักษรสีขาวสว่าง */
-    font-weight: 600 !important;
-    border: none !important;
-}
+
 
 html.dark a[class*="bg-emerald"]:hover {
     background-color: #059669 !important;
