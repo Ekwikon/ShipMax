@@ -207,3 +207,48 @@ html.dark button[onclick*="ai"] *,
 html.dark button[onclick*="AI"] * {
     color: #000000 !important;
 }
+/* ==========================================
+   🎯 FIX: กรอบติดตามพัสดุ + ตัวหนังสือ Dropdown ขนส่ง
+   ========================================== */
+
+/* 1. เปลี่ยนกรอบพื้นหลังขาวในหน้าติดตามพัสดุเป็นสีมืดเข้ม */
+html.dark .tracking-box,
+html.dark [class*="tracking"] .bg-white,
+html.dark div[class*="rounded-xl"].bg-white,
+html.dark div[class*="rounded-2xl"].bg-white {
+    background-color: #0f172a !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+}
+
+/* 2. เปลี่ยนสีหัวข้อ 1. เลือกบริษัทขนส่ง / 2. กรอกหมายเลขพัสดุ เป็นสีขาว/เทาสว่าง */
+html.dark div[class*="rounded"] span,
+html.dark div[class*="rounded"] label {
+    color: #e2e8f0 !important;
+}
+
+/* 3. ดึงสีชื่อขนส่งที่เลือก ให้เป็นสีขาวสว่างคมชัด */
+html.dark select,
+html.dark [role="combobox"],
+html.dark [class*="select"] button,
+html.dark [class*="dropdown"] button {
+    color: #ffffff !important;
+    background-color: #1e293b !important;
+    border: 1px solid rgba(16, 185, 129, 0.4) !important;
+}
+
+/* 4. แก้รายการตัวเลือกขนส่งในเมนู Dropdown (Flash, J&T, ไปรษณีย์ไทย, KEX) ให้เป็นอักษรสีขาว */
+html.dark select option,
+html.dark [role="option"],
+html.dark [class*="dropdown-menu"] *,
+html.dark [class*="select-options"] * {
+    background-color: #0f172a !important;
+    color: #ffffff !important;
+}
+
+/* 5. ไฮไลท์เวลาเอาเมาส์ชี้เลือกขนส่ง */
+html.dark select option:hover,
+html.dark select option:focus,
+html.dark [role="option"]:hover {
+    background-color: #10b981 !important;
+    color: #ffffff !important;
+}
