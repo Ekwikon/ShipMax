@@ -1075,4 +1075,4 @@ function generateAndPrintLabel() {
         alert('เกิดข้อผิดพลาดในการดึงข้อมูล: ' + e.message);
     }
 }
-}
+
