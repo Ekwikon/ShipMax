@@ -56,16 +56,16 @@ html.dark div[class*="rounded"] {
     border: 1px solid rgba(16, 185, 129, 0.35) !important;
 }
 
-/* 3. ปรับแก้ข้อความหัวข้อ และ Label ทั้งหมดให้อ่านง่าย สว่าง คมชัด */
+/* 3. ปรับแก้ข้อความทั่วไป */
 html.dark label,
 html.dark p,
-html.dark span,
+html.dark span:not(.stat-val):not(.cost-text):not(.ship-text):not(.profit-text),
 html.dark .text-slate-400,
 html.dark .text-slate-500,
 html.dark .text-slate-600,
 html.dark .text-gray-400,
 html.dark .text-gray-500 {
-    color: #cbd5e1 !important; /* สีเทาสว่าง อ่านง่าย ไม่ปวดตา */
+    color: #cbd5e1 !important;
     font-weight: 500;
 }
 
@@ -133,26 +133,77 @@ html.dark button:hover {
     box-shadow: 0 0 12px rgba(16, 185, 129, 0.4) !important;
 }
 
-/* 7. 💚 เน้นตัวเลขกำไรสุทธิ (Net Profit) ให้โดดเด่น */
+/* ==========================================
+   🎨 NEON STAT CARDS & TABLE COLOR FIXES (แยกสีตามโจทย์)
+   ========================================== */
+
+/* 🔴 1. ต้นทุน (Cost) - อักษรและกรอบสีแดงเรืองแสง */
+html.dark .text-rose-500,
+html.dark .text-red-500,
+html.dark .cost-text,
+html.dark #total-cost,
+html.dark table td:nth-child(4), /* คอลัมน์ ทุนสินค้า ในตาราง */
+html.dark table th:nth-child(4) {
+    color: #f43f5e !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0 8px rgba(244, 63, 94, 0.3);
+}
+
+html.dark [class*="border-rose"],
+html.dark [class*="border-red"],
+html.dark div:has(> #total-cost) {
+    border-color: rgba(244, 63, 94, 0.6) !important;
+    background-color: rgba(244, 63, 94, 0.05) !important;
+}
+
+/* 🟡 2. ค่าจัดส่ง (Shipping) - อักษรและกรอบสีเหลือง/ส้มเรืองแสง */
+html.dark .text-amber-500,
+html.dark .text-orange-500,
+html.dark .ship-text,
+html.dark #total-shipping,
+html.dark table td:nth-child(5), /* คอลัมน์ ค่าจัดส่ง ในตาราง */
+html.dark table th:nth-child(5) {
+    color: #fbbf24 !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0 8px rgba(251, 191, 36, 0.3);
+}
+
+html.dark [class*="border-amber"],
+html.dark [class*="border-orange"],
+html.dark div:has(> #total-shipping) {
+    border-color: rgba(245, 158, 11, 0.6) !important;
+    background-color: rgba(245, 158, 11, 0.05) !important;
+}
+
+/* 🟢 3. กำไรสุทธิ (Net Profit) - อักษรและกรอบสีเขียวนีออนเรืองแสง */
 html.dark #net-profit,
 html.dark #total-profit,
+html.dark .profit-text,
 html.dark .text-emerald-500,
-html.dark .text-emerald-600 {
+html.dark .text-emerald-600,
+html.dark table td:nth-child(6), /* คอลัมน์ กำไรสุทธิ ในตาราง */
+html.dark table th:nth-child(6) {
     color: #10b981 !important;
     font-weight: 700 !important;
-    text-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+    text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+html.dark [class*="border-emerald"],
+html.dark [class*="bg-emerald"],
+html.dark div:has(> #net-profit) {
+    border-color: rgba(52, 211, 153, 0.8) !important;
+    background-color: rgba(16, 185, 129, 0.08) !important;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.15) !important;
 }
 
 /* ==========================================
    ✨ TRANSITION & ANIMATION EFFECTS
    ========================================== */
 
-/* แอนิเมชันเปลี่ยนโหมดอย่างนุ่มนวล */
 html, body, main, div, table, tr, td, th, button, input, section, nav, header {
     transition: background-color 0.35s ease, border-color 0.35s ease, color 0.25s ease, box-shadow 0.35s ease !important;
 }
 
-/* ไอคอนหมุนเมื่อเปลี่ยนธีม */
 #theme-toggle-dark-icon, 
 #theme-toggle-light-icon {
     transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
@@ -173,7 +224,6 @@ html.dark #theme-toggle-light-icon {
     }
 }
 
-/* ขอบการ์ดเรืองแสงแบบคลื่นวิบวับเบาๆ */
 html.dark .bg-white,
 html.dark [class*="bg-white"],
 html.dark div[class*="rounded"] {
@@ -189,61 +239,4 @@ html.dark div[class*="rounded"] {
         border-color: rgba(16, 185, 129, 0.45) !important;
         box-shadow: 0 0 16px rgba(16, 185, 129, 0.15);
     }
-}
-/* ==========================================
-   🎨 NEON STAT CARDS (แยกสีการ์ดสรุปใน Dark Mode)
-   ========================================== */
-
-/* 1. ยอดขายรวม (Revenue) - ธีมสีฟ้า / เขียวจาง */
-html.dark .border-emerald-500,
-html.dark [class*="border-emerald"],
-html.dark div:has(> .text-emerald-500) {
-    border-color: rgba(16, 185, 129, 0.6) !important;
-    background-color: rgba(16, 185, 129, 0.05) !important;
-}
-
-/* 2. ต้นทุนสินค้ารวม - ธีมสีแดง / ชมพู Neon */
-html.dark .border-rose-500,
-html.dark .border-red-500,
-html.dark [class*="border-rose"],
-html.dark [class*="border-red"] {
-    border-color: rgba(244, 63, 94, 0.6) !important;
-    background-color: rgba(244, 63, 94, 0.05) !important;
-}
-html.dark .text-rose-500,
-html.dark .text-red-500,
-html.dark .border-rose-500 span,
-html.dark .border-red-500 span {
-    color: #fb7185 !important; /* ตัวเลขสีแดงนีออน */
-    font-weight: 700;
-}
-
-/* 3. ค่าจัดส่งรวม - ธีมสีส้ม / เหลือง Neon */
-html.dark .border-amber-500,
-html.dark .border-orange-500,
-html.dark [class*="border-amber"],
-html.dark [class*="border-orange"] {
-    border-color: rgba(245, 158, 11, 0.6) !important;
-    background-color: rgba(245, 158, 11, 0.05) !important;
-}
-html.dark .text-amber-500,
-html.dark .text-orange-500,
-html.dark .border-amber-500 span,
-html.dark .border-orange-500 span {
-    color: #fbbf24 !important; /* ตัวเลขสีส้มเหลืองนีออน */
-    font-weight: 700;
-}
-
-/* 4. กำไรสุทธิ (Net Profit) - ธีมสีเขียวมรกตเรืองแสง */
-html.dark .border-emerald-600,
-html.dark .bg-emerald-50,
-html.dark [class*="bg-emerald"] {
-    border-color: rgba(52, 211, 153, 0.8) !important;
-    background-color: rgba(16, 185, 129, 0.08) !important;
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.15) !important;
-}
-html.dark .text-emerald-600,
-html.dark .text-emerald-500 {
-    color: #34d399 !important; /* ตัวเลขสีเขียวนีออนคมชัด */
-    font-weight: 700;
 }
