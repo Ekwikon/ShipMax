@@ -17,6 +17,11 @@ let userLng = 100.0833;
 let donutChartInstance = null;
 let lineChartInstance = null;
 
+// Helper Function ดึง Username ของคนที่ล็อกอินปัจจุบัน
+function getCurrentUser() {
+    return localStorage.getItem(DB_KEY_AUTH) || '';
+}
+
 // ======================================================
 // INITIALIZATION & SPA ROUTING
 // ======================================================
@@ -209,7 +214,7 @@ function handleLogout() {
 }
 
 function checkAuthStatus() {
-    const loggedUser = localStorage.getItem(DB_KEY_AUTH);
+    const loggedUser = getCurrentUser();
     if (loggedUser) {
         const nameDisplay = document.getElementById('user-display-name');
         if (nameDisplay) nameDisplay.innerText = loggedUser;
@@ -239,11 +244,12 @@ function checkAuthStatus() {
 // STOCK MANAGEMENT
 // ======================================================
 async function fetchStockFromGoogleSheet() {
+    const currentUser = getCurrentUser();
     const tbody = document.getElementById('stock-table-body');
-    if (tbody) tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">กำลังโหลดข้อมูลสินค้าจาก Google Sheet...</td></tr>`;
+    if (tbody) tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">กำลังโหลดข้อมูลสินค้า...</td></tr>`;
 
     try {
-        const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getStock`);
+        const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getStock&username=${encodeURIComponent(currentUser)}`);
         if (response.ok) {
             const data = await response.json();
             if (Array.isArray(data)) {
@@ -318,7 +324,8 @@ async function handleAddNewProduct(e) {
         costPrice: Number(document.getElementById('p-cost').value),
         sellingPrice: Number(document.getElementById('p-sell').value),
         quantity: Number(document.getElementById('p-qty').value),
-        minAlert: Number(document.getElementById('p-min').value)
+        minAlert: Number(document.getElementById('p-min').value),
+        username: getCurrentUser()
     };
 
     try {
@@ -349,11 +356,12 @@ async function handleAddNewProduct(e) {
 // GOOGLE SHEET SYNC & FINANCE
 // ======================================================
 async function fetchDataFromGoogleSheet() {
+    const currentUser = getCurrentUser();
     try {
-        const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getOrders`);
+        const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getOrders&username=${encodeURIComponent(currentUser)}`);
         if (response.ok) {
             const data = await response.json();
-            if (Array.isArray(data) && data.length > 0) {
+            if (Array.isArray(data)) {
                 ordersList = data.map(item => ({
                     name: item.name || item.Name || '-',
                     courier: item.courier || item.Courier || '-',
@@ -614,7 +622,8 @@ async function printLabel() {
         productCost: productCost,
         shippingPrice: shippingPrice,
         netProfit: netProfit,
-        margin: margin
+        margin: margin,
+        username: getCurrentUser()
     };
 
     const printBtn = document.getElementById('btn-print-save');
@@ -752,9 +761,10 @@ async function sendChatMessage() {
     const systemPrompt = `คุณคือ "ShipMax Assistant" ผู้ช่วยประจำระบบจัดการคลังสินค้า คำนวณค่าจัดส่ง และสรุปบัญชีต้นทุน-กำไร 
 1. คุณเป็นผู้ชาย ให้พูดจาสุภาพ และใช้คำลงท้ายว่า "ครับ" เท่านั้น ห้ามใช้คำว่า "ค่ะ" หรือ "ครับ/ค่ะ" โดยเด็ดขาด
 2. ตอบเฉพาะคำถามที่เกี่ยวข้องกับระบบ ShipMax นี้เท่านั้น
-3. สต็อกปัจจุบัน: ${currentStock} ชิ้น, ออเดอร์ทั้งหมด: ${ordersList.length} รายการ
-4. ขนส่งที่รองรับ: Flash, J&T, ไปรษณีย์ไทย, KEX
-5. หากถามเรื่องอื่น ให้ปฏิเสธอย่างสุภาพ`;
+3. ผู้ใช้งานปัจจุบัน: ${getCurrentUser()}
+4. สต็อกปัจจุบัน: ${currentStock} ชิ้น, ออเดอร์ทั้งหมด: ${ordersList.length} รายการ
+5. ขนส่งที่รองรับ: Flash, J&T, ไปรษณีย์ไทย, KEX
+6. หากถามเรื่องอื่น ให้ปฏิเสธอย่างสุภาพ`;
 
     try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
