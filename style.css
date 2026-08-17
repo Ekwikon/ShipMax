@@ -11,7 +11,19 @@ body {
     font-family: 'Prompt', sans-serif; 
 }
 
-/* Scrollbar */
+/* 🌐 พื้นหลังตาราง Grid แบบ Modern SaaS (Light Mode) */
+.grid-bg {
+    background-color: #ffffff;
+    background-image: 
+        radial-gradient(circle at 50% 30%, rgba(63, 244, 160, 0.05) 0%, transparent 60%),
+        linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+    background-size: 100% 100%, 36px 36px, 36px 36px;
+    mask-image: radial-gradient(circle at center, black 50%, transparent 98%);
+    -webkit-mask-image: radial-gradient(circle at center, black 50%, transparent 98%);
+}
+
+/* Custom Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: #0f172a; }
 ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
@@ -41,7 +53,7 @@ html.dark div[class*="rounded"] {
     border: 1px solid rgba(16, 185, 129, 0.35) !important;
 }
 
-/* 3. ข้อความพื้นฐาน คมชัดอ่านง่าย (ไม่ดักด้วย !important รุนแรงจนบังคับสีอื่น) */
+/* 3. ข้อความพื้นฐาน คมชัดอ่านง่าย */
 html.dark label,
 html.dark p,
 html.dark span,
@@ -101,7 +113,6 @@ html.dark button:hover {
    🎯 FIX: แก้ปัญหาตัวหนังสือจมรายจุด
    ========================================== */
 
-/* แก้ข้อความ ยอดขายรวม (Revenue) และ สินค้าทั้งหมดในคลัง ที่เคยจม */
 html.dark .text-slate-900,
 html.dark .text-slate-800,
 html.dark .text-slate-700,
@@ -111,7 +122,6 @@ html.dark .text-white {
     color: #ffffff !important;
 }
 
-/* แก้ปุ่ม คุยกับ AI ผู้ช่วย / ปุ่มรีเฟรช / ปุ่มเว็บไซต์หลัก */
 html.dark button[class*="fixed"],
 html.dark button[onclick*="gps"],
 html.dark button[onclick*="GPS"],
@@ -119,6 +129,7 @@ html.dark a[href*="http"],
 html.dark .btn-secondary {
     color: #ffffff !important;
 }
+
 html.dark button[class*="fixed"] *,
 html.dark button[onclick*="gps"] * {
     color: #ffffff !important;
@@ -166,7 +177,7 @@ html.dark #total-profit {
 }
 
 /* ==========================================
-   📊 TABLE STYLING (ตารางการเงิน + ตารางคลังสินค้า)
+   📊 TABLE STYLING
    ========================================== */
 
 html.dark table {
