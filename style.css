@@ -191,5 +191,39 @@ html.dark form div[style*="background"],
 html.dark div:has(> form) div[class*="logo"] {
     background-image: url('ShipMax2.png') !important;
 }
+/* ==========================================
+   🎯 FIX: ปุ่มพิมพ์ใบปะหน้า สไตล์กรอบใส (รองรับ Light & Dark Mode)
+   ========================================== */
+
+/* 1. โหมดปกติ / ธีมสว่าง (Light Mode): ตัวอักษรและกรอบสีเข้ม */
+button:has(> *:contains("พิมพ์ใบปะหน้า")),
+button[onclick*="generateAndPrintLabel"],
+button[onclick*="print"] {
+    border: 1px solid #374151 !important;
+    border-radius: 12px !important;
+    background-color: transparent !important;
+    padding: 8px 16px !important;
+    color: #1f2937 !important;
+}
+
+button:has(> *:contains("พิมพ์ใบปะหน้า")):hover,
+button[onclick*="generateAndPrintLabel"]:hover,
+button[onclick*="print"]:hover {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* 2. โหมดกลางคืน (Dark Mode): ตัวอักษรและกรอบสีขาว */
+html.dark button:has(> *:contains("พิมพ์ใบปะหน้า")),
+html.dark button[onclick*="generateAndPrintLabel"],
+html.dark button[onclick*="print"] {
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    color: #ffffff !important;
+}
+
+html.dark button:has(> *:contains("พิมพ์ใบปะหน้า")):hover,
+html.dark button[onclick*="generateAndPrintLabel"]:hover,
+html.dark button[onclick*="print"]:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
 
 }
