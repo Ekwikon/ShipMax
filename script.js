@@ -184,16 +184,19 @@ function handleLogout() {
     localStorage.removeItem(DB_KEY_AUTH);
 
     const loginOverlay = document.getElementById('login-overlay');
-    if (loginOverlay) loginOverlay.classList.remove('hidden');
+    if (loginOverlay) {
+        loginOverlay.classList.remove('hidden');
+        loginOverlay.style.backgroundColor = 'transparent'; // บังคับเป็นพื้นหลังโปร่งใสเพื่อให้เห็นตาราง
+    }
 
     const sidebar = document.getElementById('main-sidebar');
-    if (sidebar) sidebar.classList.add('hidden');
+    if (sidebar) sidebar.classList.add('-translate-x-full');
     closeMobileMenu();
 
     const mainContent = document.getElementById('main-content');
     if (mainContent) {
-        mainContent.classList.add('hidden');
-        mainContent.classList.remove('flex');
+        mainContent.classList.remove('hidden');
+        mainContent.classList.add('flex');
     }
 
     const aiBtn = document.getElementById('ai-chat-btn');
