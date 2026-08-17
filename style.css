@@ -144,30 +144,34 @@ html.dark div[class*="bg-green"] div {
     color: #047857 !important;
 }
 /* ==========================================
-   🎯 FIX: ปุ่มรีเฟรชสต็อก (Dark Mode)
+/* ==========================================
+   🎯 FIX: ปุ่มรีเฟรชสต็อก (ดักจับด้วย Class ดั้งเดิม)
    ========================================== */
 
-/* 1. เปลี่ยนพื้นหลังปุ่มรีเฟรชสต็อกเป็นสีกรมเข้ม + ขอบเขียวนีออนจางๆ */
-html.dark button:has(svg),
-html.dark button:has(i),
-html.dark button:contains("รีเฟรช"),
-html.dark button[class*="bg-slate-100"],
-html.dark button[class*="bg-gray-100"],
-html.dark button[class*="bg-slate-200"] {
+/* 1. เปลี่ยนพื้นหลังปุ่มพื้นสีขาว/เทาอ่อน ให้เป็นสีกรมเข้มขอบเขียว */
+html.dark button.bg-slate-100,
+html.dark button.bg-slate-200,
+html.dark button.bg-gray-100,
+html.dark button.bg-gray-200,
+html.dark button.bg-white,
+html.dark div:has(> button.bg-emerald-600) > button:first-child,
+html.dark div:has(> button[class*="bg-emerald"]) > button:not([class*="bg-emerald"]) {
     background-color: #121a2d !important;
-    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+    border: 1px solid rgba(16, 185, 129, 0.4) !important;
 }
 
-/* 2. บังคับสีตัวอักษร "รีเฟรชสต็อก" ให้เป็นสีขาวสว่าง คมชัด */
-html.dark button:contains("รีเฟรช") *,
-html.dark button[class*="bg-slate-100"] *,
-html.dark button[class*="bg-gray-100"] * {
+/* 2. บังคับสีตัวอักษรข้างในปุ่มทั้งหมดให้เป็นสีขาวสว่าง คมชัด */
+html.dark button.bg-slate-100 *,
+html.dark button.bg-slate-200 *,
+html.dark button.bg-gray-100 *,
+html.dark button.bg-gray-200 *,
+html.dark button.bg-white *,
+html.dark div:has(> button[class*="bg-emerald"]) > button:not([class*="bg-emerald"]) * {
     color: #ffffff !important;
 }
 
-/* 3. สไตล์ตอนเอาเมาส์ชี้ (Hover) ให้ปุ่มสว่างขึ้นเล็กน้อย */
-html.dark button:contains("รีเฟรช"):hover,
-html.dark button[class*="bg-slate-100"]:hover {
+/* 3. เอฟเฟกต์ตอนชี้เมาส์ (Hover) */
+html.dark div:has(> button[class*="bg-emerald"]) > button:not([class*="bg-emerald"]):hover {
     background-color: #1e293b !important;
     border-color: #10b981 !important;
 }
