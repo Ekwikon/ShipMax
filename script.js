@@ -361,7 +361,7 @@ function renderStockTable() {
             if (isLow) lowStockAlertCount++;
 
             const row = tbody.insertRow();
-            row.className = "hover:bg-slate-50 dark:hover:bg-slate-800 border-b border-slate-100 dark:border-slate-800 font-medium text-xs";
+           row.className = "hover:bg-emerald-500/10 border-b border-emerald-500/30 font-medium text-xs transition-colors";
             row.innerHTML = `
                 <td class="p-3 font-bold text-slate-700 dark:text-slate-300">${p.sku || '-'}</td>
                 <td class="p-3 text-slate-900 dark:text-slate-100">${p.productName || '-'}</td>
