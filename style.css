@@ -31,3 +31,32 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
 }
+/* 1. ปรับพื้นหลังหลักของเว็บใน Dark Mode ให้เป็นสีดำสนิท */
+html.dark body, 
+html.dark #main-content, 
+html.dark main {
+    background-color: #090d16 !important; /* ดำลึกสไตล์ Modern Dashboard */
+}
+
+/* 2. ปรับการ์ดสรุปและกล่องตารางให้เป็นสีดำ + ขอบเขียว */
+html.dark .bg-white,
+html.dark [class*="bg-white"] {
+    background-color: #0f172a !important; /* สีดำ slate-900 */
+    border-color: rgba(16, 185, 129, 0.2) !important; /* ขอบเขียวจางๆ */
+}
+
+/* 3. ปรับเส้นตารางสินค้า (Table) ให้เป็นเส้นสีเขียวเด่นชัด */
+html.dark table {
+    border-collapse: collapse;
+}
+
+html.dark table th, 
+html.dark table td {
+    border-bottom: 1px solid rgba(16, 185, 129, 0.3) !important; /* เส้นกั้นแนวนอนสีเขียว */
+    color: #f1f5f9 !important; /* ตัวหนังสือสีขาวสว่าง */
+}
+
+/* เอฟเฟกต์เมื่อเอาเมาส์ชี้แถวในตาราง ให้เรืองแสงเขียวอ่อนๆ */
+html.dark table tbody tr:hover {
+    background-color: rgba(16, 185, 129, 0.08) !important;
+}
