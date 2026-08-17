@@ -1126,5 +1126,4 @@ async function printLabel() {
     `);
     printWindow.document.close();
 }
-}
-}
+
