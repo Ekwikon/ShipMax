@@ -93,3 +93,60 @@ html.dark button[class*="bg-white"] {
 html, body, main, div, table, tr, td, th, button, input {
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease !important;
 }
+/* ==========================================
+   🎯 FIX SPECIFIC BUTTONS (แก้เฉพาะปุ่มในภาพ)
+   ========================================== */
+
+/* 1. แก้กลุ่มปุ่มพื้นหลังขาว (รีเฟรชข้อมูล Sheet / รีเฟรชสต็อก) */
+html.dark button.bg-white,
+html.dark button[class*="bg-white"],
+html.dark div[class*="bg-white"] button {
+    background-color: #121a2d !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(16, 185, 129, 0.4) !important;
+}
+html.dark button.bg-white *,
+html.dark button[class*="bg-white"] * {
+    color: #ffffff !important;
+}
+
+/* 2. แก้ข้อความกำกับหัวปุ่ม (1. เลือกบริษัทขนส่ง / 2. กรอกหมายเลขพัสดุ) */
+html.dark label,
+html.dark span[class*="text-gray"],
+html.dark span[class*="text-slate"] {
+    color: #cbd5e1 !important;
+}
+
+/* 3. แก้กล่องตัวเลือก (Flash Express) และช่องกรอกหมายเลขพัสดุ */
+html.dark select,
+html.dark input[type="text"] {
+    background-color: #0e1726 !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(16, 185, 129, 0.4) !important;
+}
+
+/* 4. แก้ปุ่มตรวจสอบ (สีน้ำเงินเข้มเดิม) */
+html.dark button[class*="bg-slate"],
+html.dark button[class*="bg-gray"],
+html.dark button[class*="bg-indigo"] {
+    background-color: #1e293b !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+}
+
+/* 5. แก้ปุ่มสีเขียว (เว็บไซต์หลัก / เพิ่มสินค้าใหม่) ตัวอักษรและไอคอนสีขาวชัดเจน */
+html.dark button[class*="bg-emerald"],
+html.dark button[class*="bg-green"],
+html.dark a[class*="bg-emerald"] {
+    color: #ffffff !important;
+}
+html.dark button[class*="bg-emerald"] *,
+html.dark button[class*="bg-green"] * {
+    color: #ffffff !important;
+}
+
+/* 6. ปุ่มล้างข้อมูลในเครื่อง (ปุ่มข้อความสีแดง) */
+html.dark button[class*="text-red"],
+html.dark button[class*="text-rose"] {
+    color: #fb7185 !important;
+}
