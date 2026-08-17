@@ -980,32 +980,34 @@ function handlePrint() {
 }
 function generateAndPrintLabel() {
     try {
-        // 1. ดึงข้อมูลจากช่อง Input ในส่วน "ผลลัพธ์จากการวิเคราะห์" โดยระบุ ID ช่องตรงๆ
-        const name = document.getElementById('receiverName')?.value || 
-                     document.querySelector('input[placeholder*="ชื่อ"]')?.value || '-';
+        // 1. ดึงช่อง Input ทั้งหมดที่อยู่ในกล่อง "ผลลัพธ์จากการวิเคราะห์"
+        const resultInputs = document.querySelectorAll('div:has(> button) input, input');
         
-        const phone = document.getElementById('receiverPhone')?.value || 
-                      document.querySelector('input[placeholder*="โทร"]')?.value || '-';
-        
-        const address = document.getElementById('receiverAddress')?.value || 
-                        document.querySelector('input[placeholder*="ที่อยู่"]')?.value || '-';
-        
-        const subDistrict = document.getElementById('subDistrict')?.value || '-';
-        const district = document.getElementById('district')?.value || '-';
-        const province = document.getElementById('province')?.value || '-';
-        
-        const zipcode = document.getElementById('zipcode')?.value || 
-                        document.querySelector('div:has(> *:contains("รหัสไปรษณีย์")) + input')?.value || '';
+        // อ่านค่าตามลำดับช่องที่เห็นในรูปหน้าจอเป๊ะๆ
+        // ช่อง 1: ชื่อผู้รับ, ช่อง 2: เบอร์โทร, ช่อง 3: ที่อยู่หลัก
+        // ช่อง 4: ตำบล, ช่อง 5: อำเภอ, ช่อง 6: จังหวัด, ช่อง 7: รหัสไปรษณีย์
+        let name = '-', phone = '-', address = '-', subDistrict = '-', district = '-', province = '-', zipcode = '-';
 
-        // ดึงชื่อขนส่งที่แนะนำ
-        const courierElement = document.querySelector('.bg-yellow-50, .bg-amber-50, [class*="courier"]');
-        let courierName = 'ShipMax Express';
-        if (courierElement) {
-            if (courierElement.innerText.includes('Flash')) courierName = 'Flash Express';
-            else if (courierElement.innerText.includes('J&T')) courierName = 'J&T Express';
+        // วนหาค่าจาก Input ที่มีอยู่ในหน้าเว็บ
+        const inputs = Array.from(document.querySelectorAll('input')).filter(i => i.type !== 'hidden');
+        
+        // ดึงข้อมูล 7 ช่องล่างสุด (โซนผลลัพธ์)
+        if (inputs.length >= 7) {
+            const resultGroup = inputs.slice(-7);
+            name = resultGroup[0]?.value || '-';
+            phone = resultGroup[1]?.value || '-';
+            address = resultGroup[2]?.value || '-';
+            subDistrict = resultGroup[3]?.value || '-';
+            district = resultGroup[4]?.value || '-';
+            province = resultGroup[5]?.value || '-';
+            zipcode = resultGroup[6]?.value || '-';
         }
 
-        // 2. สร้างหน้าต่างใบปะหน้า
+        // ดึงชื่อขนส่ง
+        const courierBadge = document.body.innerText.includes('Flash Express') ? 'Flash Express' : 
+                             document.body.innerText.includes('J&T') ? 'J&T Express' : 'ShipMax Express';
+
+        // 2. เปิดหน้าต่างใหม่เพื่อแสดงใบปะหน้า
         const printWindow = window.open('', '_blank', 'width=650,height=850');
         if (!printWindow) {
             alert('กรุณาเปิดอนุญาต Pop-up บนเบราว์เซอร์เพื่อพิมพ์ใบปะหน้า');
@@ -1021,40 +1023,42 @@ function generateAndPrintLabel() {
                     @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap');
                     @page { size: A6 portrait; margin: 0; }
                     body { font-family: 'Prompt', sans-serif; margin: 0; padding: 15px; background: #fff; color: #000; box-sizing: border-box; }
-                    .label-container { border: 2px solid #000; border-radius: 8px; padding: 15px; }
+                    .label-container { border: 2px solid #000; border-radius: 8px; padding: 15px; height: 95%; display: flex; flex-direction: column; justify-content: space-between; }
                     .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 8px; }
-                    .logo { font-size: 18px; font-weight: 700; }
+                    .logo { font-size: 20px; font-weight: 700; }
                     .courier-badge { background: #000; color: #fff; padding: 4px 10px; font-weight: 600; border-radius: 4px; font-size: 13px; }
                     .section { margin-top: 10px; }
                     .label-title { font-size: 11px; font-weight: 600; color: #555; text-transform: uppercase; }
-                    .sender-info { font-size: 12px; line-height: 1.3; }
-                    .receiver-box { border: 1.5px solid #000; padding: 10px; border-radius: 6px; margin-top: 8px; background: #fafafa; }
+                    .sender-info { font-size: 12px; line-height: 1.4; color: #333; }
+                    .receiver-box { border: 1.5px solid #000; padding: 12px; border-radius: 6px; margin-top: 10px; background: #fafafa; }
                     .receiver-name { font-size: 16px; font-weight: 700; }
-                    .receiver-address { font-size: 13px; line-height: 1.4; margin-top: 4px; }
-                    .zipcode { font-size: 26px; font-weight: 700; text-align: right; letter-spacing: 3px; margin-top: 8px; border-top: 1px dashed #ccc; padding-top: 4px; }
+                    .receiver-address { font-size: 13px; line-height: 1.5; margin-top: 6px; }
+                    .zipcode { font-size: 26px; font-weight: 700; text-align: right; letter-spacing: 3px; margin-top: 10px; border-top: 1px dashed #ccc; padding-top: 6px; }
                 </style>
             </head>
             <body>
                 <div class="label-container">
-                    <div class="header">
-                        <div class="logo">📦 ShipMax</div>
-                        <div class="courier-badge">${courierName}</div>
-                    </div>
-                    <div class="section">
-                        <div class="label-title">ผู้ส่ง (Sender)</div>
-                        <div class="sender-info">
-                            <strong>ร้านค้า ShipMax Online</strong><br>
-                            โทร. 081-234-5678
+                    <div>
+                        <div class="header">
+                            <div class="logo">📦 ShipMax</div>
+                            <div class="courier-badge">${courierBadge}</div>
                         </div>
-                    </div>
-                    <div class="receiver-box">
-                        <div class="label-title">ผู้รับ (Recipient)</div>
-                        <div class="receiver-name">${name} (${phone})</div>
-                        <div class="receiver-address">
-                            ${address}<br>
-                            ต.${subDistrict} อ.${district} จ.${province}
+                        <div class="section">
+                            <div class="label-title">ผู้ส่ง (Sender)</div>
+                            <div class="sender-info">
+                                <strong>ร้านค้า ShipMax Online</strong><br>
+                                โทร. 081-234-5678
+                            </div>
                         </div>
-                        <div class="zipcode">${zipcode}</div>
+                        <div class="receiver-box">
+                            <div class="label-title">ผู้รับ (Recipient)</div>
+                            <div class="receiver-name">${name} (${phone})</div>
+                            <div class="receiver-address">
+                                ${address}<br>
+                                ต.${subDistrict} อ.${district} จ.${province}
+                            </div>
+                            <div class="zipcode">${zipcode}</div>
+                        </div>
                     </div>
                 </div>
                 <script>
@@ -1070,5 +1074,5 @@ function generateAndPrintLabel() {
     } catch (e) {
         alert('เกิดข้อผิดพลาดในการดึงข้อมูล: ' + e.message);
     }
-
+}
 }
