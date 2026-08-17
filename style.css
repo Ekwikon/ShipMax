@@ -190,3 +190,60 @@ html.dark div[class*="rounded"] {
         box-shadow: 0 0 16px rgba(16, 185, 129, 0.15);
     }
 }
+/* ==========================================
+   🎨 NEON STAT CARDS (แยกสีการ์ดสรุปใน Dark Mode)
+   ========================================== */
+
+/* 1. ยอดขายรวม (Revenue) - ธีมสีฟ้า / เขียวจาง */
+html.dark .border-emerald-500,
+html.dark [class*="border-emerald"],
+html.dark div:has(> .text-emerald-500) {
+    border-color: rgba(16, 185, 129, 0.6) !important;
+    background-color: rgba(16, 185, 129, 0.05) !important;
+}
+
+/* 2. ต้นทุนสินค้ารวม - ธีมสีแดง / ชมพู Neon */
+html.dark .border-rose-500,
+html.dark .border-red-500,
+html.dark [class*="border-rose"],
+html.dark [class*="border-red"] {
+    border-color: rgba(244, 63, 94, 0.6) !important;
+    background-color: rgba(244, 63, 94, 0.05) !important;
+}
+html.dark .text-rose-500,
+html.dark .text-red-500,
+html.dark .border-rose-500 span,
+html.dark .border-red-500 span {
+    color: #fb7185 !important; /* ตัวเลขสีแดงนีออน */
+    font-weight: 700;
+}
+
+/* 3. ค่าจัดส่งรวม - ธีมสีส้ม / เหลือง Neon */
+html.dark .border-amber-500,
+html.dark .border-orange-500,
+html.dark [class*="border-amber"],
+html.dark [class*="border-orange"] {
+    border-color: rgba(245, 158, 11, 0.6) !important;
+    background-color: rgba(245, 158, 11, 0.05) !important;
+}
+html.dark .text-amber-500,
+html.dark .text-orange-500,
+html.dark .border-amber-500 span,
+html.dark .border-orange-500 span {
+    color: #fbbf24 !important; /* ตัวเลขสีส้มเหลืองนีออน */
+    font-weight: 700;
+}
+
+/* 4. กำไรสุทธิ (Net Profit) - ธีมสีเขียวมรกตเรืองแสง */
+html.dark .border-emerald-600,
+html.dark .bg-emerald-50,
+html.dark [class*="bg-emerald"] {
+    border-color: rgba(52, 211, 153, 0.8) !important;
+    background-color: rgba(16, 185, 129, 0.08) !important;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.15) !important;
+}
+html.dark .text-emerald-600,
+html.dark .text-emerald-500 {
+    color: #34d399 !important; /* ตัวเลขสีเขียวนีออนคมชัด */
+    font-weight: 700;
+}
