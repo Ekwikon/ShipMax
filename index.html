@@ -24,10 +24,10 @@
     <!-- 🌐 เลเยอร์พื้นหลังตาราง Grid Pattern -->
     <div class="absolute inset-0 grid-bg pointer-events-none z-0"></div>
 
-    <!-- Auth Modal (ปรับเพิ่ม backdrop-blur-xs เพื่อให้เห็นตารางด้านหลังชัดเจน) -->
-    <div id="login-overlay" class="fixed inset-0 bg-slate-900/10 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <!-- Auth Modal (ปรับใช้ bg-transparent และ backdrop-blur เพื่อให้มองเห็นตารางด้านหลังชัดเจน) -->
+    <div id="login-overlay" class="fixed inset-0 bg-transparent backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <!-- Login Box -->
-        <div id="login-box" class="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full border border-slate-100 space-y-5 sm:space-y-6 relative z-10">
+        <div id="login-box" class="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full border border-slate-200 space-y-5 sm:space-y-6 relative z-10">
             <div class="text-center space-y-2">
                 <img src="ShipMax.png" alt="ShipMax Logo" class="h-16 sm:h-20 w-auto mx-auto mb-2 object-contain">
                 <h2 class="text-xl sm:text-2xl font-bold text-slate-900">เข้าสู่ระบบ ShipMax</h2>
@@ -45,12 +45,12 @@
                 <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm py-3.5 rounded-xl transition shadow-md">🔑 เข้าสู่ระบบ</button>
             </form>
             <div class="text-center pt-2 border-t border-slate-100">
-                <p class="text-xs text-slate-500">ยังไม่มีบัญชีผู้ใช้งาน? <button onclick="toggleAuthForm('register')" class="text-emerald-600 font-bold hover:underline ml-1">สมัครสมาชิกที่นี่</button></p>
+                <p class="text-xs text-slate-500">ยังไม่มีบัญชีผู้ใช้งาน? <button type="button" onclick="toggleAuthForm('register')" class="text-emerald-600 font-bold hover:underline ml-1">สมัครสมาชิกที่นี่</button></p>
             </div>
         </div>
 
         <!-- Register Box -->
-        <div id="register-box" class="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full border border-slate-100 space-y-5 sm:space-y-6 hidden relative z-10">
+        <div id="register-box" class="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full border border-slate-200 space-y-5 sm:space-y-6 hidden relative z-10">
             <div class="text-center space-y-2">
                 <img src="ShipMax.png" alt="ShipMax Logo" class="h-16 sm:h-20 w-auto mx-auto mb-2 object-contain">
                 <h2 class="text-xl sm:text-2xl font-bold text-slate-900">สมัครสมาชิกใหม่</h2>
@@ -72,7 +72,7 @@
                 <button type="submit" id="reg-submit-btn" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-sm py-3.5 rounded-xl transition shadow-md">📝 ยืนยันการสมัครสมาชิก</button>
             </form>
             <div class="text-center pt-2 border-t border-slate-100">
-                <p class="text-xs text-slate-500">มีบัญชีผู้ใช้งานอยู่แล้ว? <button onclick="toggleAuthForm('login')" class="text-emerald-600 font-bold hover:underline ml-1">เข้าสู่ระบบ</button></p>
+                <p class="text-xs text-slate-500">มีบัญชีผู้ใช้งานอยู่แล้ว? <button type="button" onclick="toggleAuthForm('login')" class="text-emerald-600 font-bold hover:underline ml-1">เข้าสู่ระบบ</button></p>
             </div>
         </div>
     </div>
