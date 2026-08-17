@@ -191,4 +191,26 @@ html.dark form div[style*="background"],
 html.dark div:has(> form) div[class*="logo"] {
     background-image: url('ShipMax2.png') !important;
 }
+/* ==========================================
+   🎯 FIX: เพิ่มเส้นกรอบปุ่ม พิมพ์ใบปะหน้า ให้เท่ากับปุ่มข้างๆ
+   ========================================== */
+
+/* 1. เพิ่มเส้นกรอบสีขาวมนและจัด Padding ให้เท่ากับปุ่มคัดลอกที่อยู่ */
+html.dark button:has(> *:contains("พิมพ์ใบปะหน้า")),
+html.dark button[onclick*="Print"],
+html.dark button[onclick*="print"] {
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    border-radius: 12px !important;
+    background-color: transparent !important;
+    padding: 8px 16px !important;
+    color: #ffffff !important;
+}
+
+/* 2. สไตล์ตอนชี้เมาส์ (Hover) ให้สว่างขึ้นเล็กน้อย */
+html.dark button:has(> *:contains("พิมพ์ใบปะหน้า")):hover,
+html.dark button[onclick*="Print"]:hover,
+html.dark button[onclick*="print"]:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: #ffffff !important;
+}
 }
