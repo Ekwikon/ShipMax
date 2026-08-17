@@ -4,7 +4,7 @@ body {
     font-family: 'Prompt', sans-serif; 
 }
 
-/* 🌐 พื้นหลังตาราง Grid แบบ Modern SaaS */
+/* 🌐 พื้นหลังตาราง Grid แบบ Modern SaaS (Light Mode) */
 .grid-bg {
     background-color: #ffffff;
     background-image: 
@@ -22,45 +22,68 @@ body {
     height: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: #f1f5f9;
+    background: #0f172a;
 }
 ::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: #1e293b;
     border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+    background: #10b981;
 }
-/* 1. ปรับพื้นหลังหลักของเว็บใน Dark Mode ให้เป็นสีดำสนิท */
+
+/* ==========================================
+   🌙 DARK MODE COMPONENT STYLING (ปรับใหม่)
+   ========================================== */
+
+/* 1. พื้นหลังหลักสีดำสนิท + ลาย Grid เขียว Neon */
 html.dark body, 
 html.dark #main-content, 
-html.dark main {
-    background-color: #090d16 !important; /* ดำลึกสไตล์ Modern Dashboard */
+html.dark main,
+html.dark .grid-bg {
+    background-color: #050811 !important; /* ดำสนิท */
+    background-image: 
+        linear-gradient(to right, rgba(16, 185, 129, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(16, 185, 129, 0.07) 1px, transparent 1px) !important;
+    background-size: 32px 32px !important;
 }
 
-/* 2. ปรับการ์ดสรุปและกล่องตารางให้เป็นสีดำ + ขอบเขียว */
+/* 2. การ์ดและกล่องตาราง (ทับ background เดิม ปรับขอบเขียวเรืองแสง) */
 html.dark .bg-white,
 html.dark [class*="bg-white"] {
-    background-color: #0f172a !important; /* สีดำ slate-900 */
-    border-color: rgba(16, 185, 129, 0.2) !important; /* ขอบเขียวจางๆ */
+    background-color: #0b1120 !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.05);
 }
 
-/* 3. ปรับเส้นตารางสินค้า (Table) ให้เป็นเส้นสีเขียวเด่นชัด */
+/* 3. แก้ปัญหาหัวตาราง (TH/THEAD) เป็นแถบขาว */
+html.dark table thead,
+html.dark table thead tr,
+html.dark table th {
+    background-color: #070d19 !important;
+    color: #10b981 !important; /* ข้อความหัวตารางสีเขียว */
+    border-bottom: 2px solid rgba(16, 185, 129, 0.5) !important;
+}
+
+/* 4. เส้นกั้นตารางแนวนอนสีเขียว + ตัวหนังสือสว่าง */
 html.dark table {
-    border-collapse: collapse;
+    border-collapse: collapse !important;
 }
 
-html.dark table th, 
 html.dark table td {
-    border-bottom: 1px solid rgba(16, 185, 129, 0.3) !important; /* เส้นกั้นแนวนอนสีเขียว */
-    color: #f1f5f9 !important; /* ตัวหนังสือสีขาวสว่าง */
+    border-bottom: 1px solid rgba(16, 185, 129, 0.25) !important;
+    color: #f8fafc !important;
 }
 
-/* เอฟเฟกต์เมื่อเอาเมาส์ชี้แถวในตาราง ให้เรืองแสงเขียวอ่อนๆ */
+/* 5. เอฟเฟกต์ Hover แถวตาราง เรืองแสงเขียว Neon */
 html.dark table tbody tr:hover {
-    background-color: rgba(16, 185, 129, 0.08) !important;
+    background-color: rgba(16, 185, 129, 0.12) !important;
 }
-html.dark body {
-    background-image: radial-gradient(rgba(16, 185, 129, 0.15) 1px, transparent 0) !important;
-    background-size: 24px 24px !important;
+
+/* 6. แก้ไขสีข้อความส่วนหัวของการ์ดที่มองไม่เห็น */
+html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark span {
+    color: #f8fafc;
+}
+html.dark .text-slate-400, html.dark .text-slate-500 {
+    color: #94a3b8 !important;
 }
