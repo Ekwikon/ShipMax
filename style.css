@@ -143,7 +143,7 @@ html.dark div[class*="bg-green"] span,
 html.dark div[class*="bg-green"] div {
     color: #047857 !important;
 }
-/* ==========================================
+
 /* ==========================================
    🎯 FIX: ปุ่มรีเฟรชสต็อก (ดักจับด้วย Class ดั้งเดิม)
    ========================================== */
@@ -175,6 +175,7 @@ html.dark div:has(> button[class*="bg-emerald"]) > button:not([class*="bg-emeral
     background-color: #1e293b !important;
     border-color: #10b981 !important;
 }
+
 /* ==========================================
    🎯 FIX: เปลี่ยนโลโก้หน้า Login เป็น ShipMax2.png เฉพาะ Dark Mode
    ========================================== */
@@ -191,11 +192,12 @@ html.dark form div[style*="background"],
 html.dark div:has(> form) div[class*="logo"] {
     background-image: url('ShipMax2.png') !important;
 }
+
 /* ==========================================
-   🎯 FIX: ปุ่มพิมพ์ใบปะหน้า สไตล์กรอบใส (รองรับ Light & Dark Mode)
+   🎯 FIX NEW: สไตล์ปุ่มพิมพ์ใบปะหน้า (รองรับทั้ง Light & Dark Mode)
    ========================================== */
 
-/* 1. โหมดปกติ / ธีมสว่าง (Light Mode): ตัวอักษรและกรอบสีเข้ม */
+/* โหมดปกติ / ธีมสว่าง (Light Mode): ตัวอักษรสีเข้ม + กรอบชัดเจน */
 button:has(> *:contains("พิมพ์ใบปะหน้า")),
 button[onclick*="generateAndPrintLabel"],
 button[onclick*="print"] {
@@ -212,7 +214,7 @@ button[onclick*="print"]:hover {
     background-color: rgba(0, 0, 0, 0.05) !important;
 }
 
-/* 2. โหมดกลางคืน (Dark Mode): ตัวอักษรและกรอบสีขาว */
+/* โหมดกลางคืน (Dark Mode): ตัวอักษรและกรอบสีขาว */
 html.dark button:has(> *:contains("พิมพ์ใบปะหน้า")),
 html.dark button[onclick*="generateAndPrintLabel"],
 html.dark button[onclick*="print"] {
@@ -226,4 +228,40 @@ html.dark button[onclick*="print"]:hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
+/* ==========================================
+   🎯 FIX NEW: ซิงก์สีการ์ดสรุปบัญชี 4 ใบด้านบน (ดึงตามลำดับกล่อง)
+   ========================================== */
+
+/* การ์ดที่ 1: ยอดขายรวม -> สีฟ้าสด */
+html.dark main div.grid > div:nth-child(1) span,
+html.dark main div.grid > div:nth-child(1) div,
+html.dark main div.grid > div:nth-child(1) p {
+    color: #38bdf8 !important;
+}
+
+/* การ์ดที่ 2: ต้นทุนสินค้ารวม -> สีชมพูอมแดง (#f43f5e) */
+html.dark main div.grid > div:nth-child(2) span,
+html.dark main div.grid > div:nth-child(2) div,
+html.dark main div.grid > div:nth-child(2) p {
+    color: #f43f5e !important;
+}
+
+/* การ์ดที่ 3: ค่าจัดส่งรวม -> สีส้ม/เหลืองทอง (#f59e0b) */
+html.dark main div.grid > div:nth-child(3) span,
+html.dark main div.grid > div:nth-child(3) div,
+html.dark main div.grid > div:nth-child(3) p {
+    color: #f59e0b !important;
+}
+
+/* การ์ดที่ 4: กำไรสุทธิ -> พื้นหลังเข้มขอบเขียว + ตัวอักษรสีเขียวสด (#10b981) */
+html.dark main div.grid > div:nth-child(4) {
+    background-color: #0a0f1d !important;
+    border: 2px solid #10b981 !important;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.2) !important;
+}
+
+html.dark main div.grid > div:nth-child(4) span,
+html.dark main div.grid > div:nth-child(4) div,
+html.dark main div.grid > div:nth-child(4) p {
+    color: #10b981 !important;
 }
