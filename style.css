@@ -191,27 +191,4 @@ html.dark form div[style*="background"],
 html.dark div:has(> form) div[class*="logo"] {
     background-image: url('ShipMax2.png') !important;
 }
-/* ==========================================
-   🖨️ PRINT STYLES (ทำงานเฉพาะตอนสั่งพิมพ์)
-   ========================================== */
-@media print {
-    /* 1. ซ่อนองค์ประกอบที่ไม่เกี่ยวข้องทั้งหมด */
-    body * {
-        visibility: hidden;
-    }
-
-    /* 2. แสดงเฉพาะกล่องใบปะหน้า (ตั้ง id="print-area") */
-    #print-area, #print-area * {
-        visibility: visible;
-    }
-
-    /* 3. จัดตำแหน่งใบปะหน้าให้อยู่มุมซ้ายบนของกระดาษ */
-    #print-area {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        color: #000 !important;
-        background: #fff !important;
-    }
 }
