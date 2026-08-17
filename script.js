@@ -980,6 +980,12 @@ function handlePrint() {
 }
 function generateAndPrintLabel() {
     try {
+        // 🟢 1. เรียกใช้ฟังก์ชันบันทึกข้อมูลเดิมของระบบก่อน (ใส่ชื่อฟังก์ชันบันทึกของคุณตรงนี้)
+        if (typeof saveTransaction === 'function') {
+            saveTransaction(); // หรือเปลี่ยนเป็นชื่อฟังก์ชันบันทึกข้อมูลของคุณ
+        } else if (typeof saveData === 'function') {
+            saveData();
+        }
         // 1. ดึงช่อง Input ทั้งหมดที่อยู่ในกล่อง "ผลลัพธ์จากการวิเคราะห์"
         const resultInputs = document.querySelectorAll('div:has(> button) input, input');
         
