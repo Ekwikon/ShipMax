@@ -148,7 +148,7 @@ async function handleRegister(e) {
     toggleAuthForm('login');
 }
 
-function handleLogin(e) {
+async function handleLogin(e) {
     if (e) e.preventDefault();
     const userEl = document.getElementById('login-username');
     const passEl = document.getElementById('login-password');
@@ -156,13 +156,51 @@ function handleLogin(e) {
 
     const user = userEl.value.trim();
     const pass = passEl.value;
-    const foundUser = usersList.find(u => u.username === user && u.password === pass);
+    const loginBtn = document.querySelector('#login-box button[type="submit"]') || document.querySelector('#login-box button');
 
-    if (foundUser) {
-        localStorage.setItem(DB_KEY_AUTH, foundUser.username);
+    if (loginBtn) {
+        loginBtn.innerText = "⏳ กำลังตรวจสอบ...";
+        loginBtn.disabled = true;
+    }
+
+    let isSuccess = false;
+    let loggedUsername = user;
+
+    // 1. ลองยิงไปตรวจสอบ Login กับ Google Apps Script ก่อน
+    try {
+        const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=login&username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}`);
+        if (response.ok) {
+            const resData = await response.json();
+            if (resData.status === 'success') {
+                isSuccess = true;
+                loggedUsername = resData.username || user;
+            }
+        }
+    } catch (err) {
+        console.warn("ไม่สามารถเช็กรหัสผ่านผ่าน Google Sheet ได้ ใช้ข้อมูลสำรองในเครื่องแทน:", err);
+    }
+
+    // 2. ถ้าออนไลน์เช็กไม่ผ่าน ให้ fallback มาเช็กใน LocalStorage สำรอง
+    if (!isSuccess) {
+        const foundUser = usersList.find(u => u.username.toLowerCase() === user.toLowerCase() && u.password === pass);
+        if (foundUser) {
+            isSuccess = true;
+            loggedUsername = foundUser.username;
+        }
+    }
+
+    // คืนค่าปุ่ม
+    if (loginBtn) {
+        loginBtn.innerHTML = "🔑 เข้าสู่ระบบ";
+        loginBtn.disabled = false;
+    }
+
+    // 3. สรุปผลการล็อกอิน
+    if (isSuccess) {
+        localStorage.setItem(DB_KEY_AUTH, loggedUsername);
         
         const nameDisplay = document.getElementById('user-display-name');
-        if (nameDisplay) nameDisplay.innerText = foundUser.username;
+        if (nameDisplay) nameDisplay.innerText = loggedUsername;
 
         const loginOverlay = document.getElementById('login-overlay');
         if (loginOverlay) loginOverlay.classList.add('hidden');
