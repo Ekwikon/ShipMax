@@ -191,3 +191,18 @@ html.dark [class*="bg-orange-"] {
 html.dark button:not(.bg-emerald-500):not(#btn-mic) {
     color: #f8fafc !important;
 }
+/* 💚 บังคับสีตัวเลขกำไรสุทธิให้เป็นเขียวเข้ม เด่นชัด */
+html.dark .text-emerald-500,
+html.dark .text-emerald-600,
+html.dark [class*="emerald"] span,
+#net-profit, 
+#total-profit {
+    color: #059669 !important; /* สีเขียว Emerald เข้มข้น */
+    font-weight: 700 !important;
+}
+
+/* ปรับสีคำว่า "บาท" ข้างๆ ตัวเลขให้เห็นชัดขึ้นด้วย */
+#net-profit + span, 
+#total-profit + span {
+    color: #10b981 !important;
+}
