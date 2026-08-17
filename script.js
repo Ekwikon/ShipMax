@@ -17,6 +17,43 @@ let userLng = 100.0833;
 let donutChartInstance = null;
 let lineChartInstance = null;
 
+// ======================================================
+// 🌙 ☀️ DARK / LIGHT MODE SYSTEM (เพิ่มใหม่)
+// ======================================================
+function initTheme() {
+    const savedTheme = localStorage.getItem('ff_theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+        document.documentElement.classList.add('dark');
+        updateThemeIcons(true);
+    } else {
+        document.documentElement.classList.remove('dark');
+        updateThemeIcons(false);
+    }
+}
+
+function toggleDarkMode() {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('ff_theme', isDark ? 'dark' : 'light');
+    updateThemeIcons(isDark);
+}
+
+function updateThemeIcons(isDark) {
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    
+    if (darkIcon && lightIcon) {
+        if (isDark) {
+            darkIcon.classList.add('hidden');
+            lightIcon.classList.remove('hidden');
+        } else {
+            darkIcon.classList.remove('hidden');
+            lightIcon.classList.add('hidden');
+        }
+    }
+}
+
 // Helper Function ดึง Username ของคนที่ล็อกอินปัจจุบัน
 function getCurrentUser() {
     return localStorage.getItem(DB_KEY_AUTH) || '';
@@ -26,6 +63,7 @@ function getCurrentUser() {
 // INITIALIZATION & SPA ROUTING
 // ======================================================
 window.addEventListener('DOMContentLoaded', () => {
+    initTheme(); // เรียกใช้อัปเดตโหมดมืด-สว่างทันทีเมื่อเปิดหน้า
     checkAuthStatus();
 });
 
@@ -323,15 +361,15 @@ function renderStockTable() {
             if (isLow) lowStockAlertCount++;
 
             const row = tbody.insertRow();
-            row.className = "hover:bg-slate-50 border-b border-slate-100 font-medium text-xs";
+            row.className = "hover:bg-slate-50 dark:hover:bg-slate-800 border-b border-slate-100 dark:border-slate-800 font-medium text-xs";
             row.innerHTML = `
-                <td class="p-3 font-bold text-slate-700">${p.sku || '-'}</td>
-                <td class="p-3 text-slate-900">${p.productName || '-'}</td>
-                <td class="p-3 text-slate-500">${Number(p.costPrice || 0).toLocaleString()} บ.</td>
-                <td class="p-3 text-emerald-600 font-semibold">${Number(p.sellingPrice || 0).toLocaleString()} บ.</td>
-                <td class="p-3 font-bold ${isLow ? 'text-rose-600' : 'text-slate-800'}">${qty.toLocaleString()} ชิ้น</td>
+                <td class="p-3 font-bold text-slate-700 dark:text-slate-300">${p.sku || '-'}</td>
+                <td class="p-3 text-slate-900 dark:text-slate-100">${p.productName || '-'}</td>
+                <td class="p-3 text-slate-500 dark:text-slate-400">${Number(p.costPrice || 0).toLocaleString()} บ.</td>
+                <td class="p-3 text-emerald-600 dark:text-emerald-400 font-semibold">${Number(p.sellingPrice || 0).toLocaleString()} บ.</td>
+                <td class="p-3 font-bold ${isLow ? 'text-rose-600 dark:text-rose-400' : 'text-slate-800 dark:text-slate-200'}">${qty.toLocaleString()} ชิ้น</td>
                 <td class="p-3">
-                    <span class="px-2 py-0.5 text-[10px] font-bold rounded-full ${isLow ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
+                    <span class="px-2 py-0.5 text-[10px] font-bold rounded-full ${isLow ? 'bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300' : 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300'}">
                         ${isLow ? '⚠️ สต็อกต่ำ' : 'พร้อมส่ง'}
                     </span>
                 </td>
@@ -445,15 +483,15 @@ function loadDashboardAndFinanceData() {
                 ship += itemShip;
 
                 const row = finTable.insertRow();
-                row.className = "border-b border-slate-100 font-medium hover:bg-slate-50 transition";
+                row.className = "border-b border-slate-100 dark:border-slate-800 font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition";
                 row.innerHTML = `
-                    <td class="p-3 font-bold text-slate-800">${item.name || '-'}</td>
-                    <td class="p-3 text-slate-600">${item.courier || '-'}</td>
-                    <td class="p-3 text-slate-700 font-semibold">${itemRev.toLocaleString()} บ.</td>
+                    <td class="p-3 font-bold text-slate-800 dark:text-slate-200">${item.name || '-'}</td>
+                    <td class="p-3 text-slate-600 dark:text-slate-400">${item.courier || '-'}</td>
+                    <td class="p-3 text-slate-700 dark:text-slate-300 font-semibold">${itemRev.toLocaleString()} บ.</td>
                     <td class="p-3 text-rose-500">${itemCost.toLocaleString()} บ.</td>
                     <td class="p-3 text-amber-600">${itemShip.toLocaleString()} บ.</td>
-                    <td class="p-3 font-bold ${itemProfit >= 0 ? 'text-emerald-600' : 'text-rose-600'}">${itemProfit.toLocaleString()} บ.</td>
-                    <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${itemProfit >= 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">${itemMargin}%</span></td>
+                    <td class="p-3 font-bold ${itemProfit >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">${itemProfit.toLocaleString()} บ.</td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${itemProfit >= 0 ? 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300' : 'bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300'}">${itemMargin}%</span></td>
                 `;
             });
         }
@@ -628,7 +666,7 @@ Respond ONLY with a valid JSON object matching this structure:
         document.getElementById('out-price').innerText = result.price || '0';
         document.getElementById('out-reason').innerText = `*เหตุผล: ${result.reason || ''}`;
 
-        document.getElementById('status-badge').className = "bg-emerald-100 text-emerald-700 text-xs px-2.5 py-1 rounded-full font-medium";
+        document.getElementById('status-badge').className = "bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 text-xs px-2.5 py-1 rounded-full font-medium";
         document.getElementById('status-badge').innerText = "✓ วิเคราะห์ต้นทุนค่าส่งเสร็จสิ้น";
     } catch (error) {
         console.error(error);
@@ -842,16 +880,16 @@ function appendMessage(text, sender) {
     const msgDiv = document.createElement('div');
 
     if (sender === 'user') {
-        msgDiv.className = "bg-slate-900 text-white p-3 rounded-xl rounded-tr-none max-w-[85%] ml-auto shadow-sm text-xs";
+        msgDiv.className = "bg-slate-900 dark:bg-emerald-500 text-white dark:text-slate-950 font-medium p-3 rounded-xl rounded-tr-none max-w-[85%] ml-auto shadow-sm text-xs";
         msgDiv.innerText = text;
     } else if (sender === 'ai') {
-        msgDiv.className = "bg-emerald-100 text-emerald-950 p-3 rounded-xl rounded-tl-none max-w-[85%] shadow-sm text-xs leading-relaxed space-y-1";
+        msgDiv.className = "bg-emerald-100 dark:bg-emerald-900/50 text-emerald-950 dark:text-emerald-200 p-3 rounded-xl rounded-tl-none max-w-[85%] shadow-sm text-xs leading-relaxed space-y-1";
         let formattedText = text
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/\n/g, '<br>');
         msgDiv.innerHTML = formattedText;
     } else {
-        msgDiv.className = "bg-slate-200 text-slate-600 p-3 rounded-xl rounded-tl-none max-w-[85%] animate-pulse text-xs";
+        msgDiv.className = "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 p-3 rounded-xl rounded-tl-none max-w-[85%] animate-pulse text-xs";
         msgDiv.innerText = text;
     }
 
@@ -928,7 +966,7 @@ function toggleVoiceRecognition() {
 
     recognition.onend = function() {
         isListening = false;
-        if (micBtn) micBtn.className = "p-2.5 bg-slate-100 hover:bg-rose-100 text-slate-700 hover:text-rose-600 rounded-xl transition text-base";
+        if (micBtn) micBtn.className = "p-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-rose-100 text-slate-700 dark:text-slate-200 hover:text-rose-600 rounded-xl transition text-base";
     };
 
     recognition.start();
