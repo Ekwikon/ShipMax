@@ -932,4 +932,46 @@ function toggleVoiceRecognition() {
     };
 
     recognition.start();
+
+    // ======================================================
+// 1. ระบบ DARK / LIGHT MODE SYSTEM
+// ======================================================
+function initTheme() {
+    const savedTheme = localStorage.getItem('ff_theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+        document.documentElement.classList.add('dark');
+        updateThemeIcons(true);
+    } else {
+        document.documentElement.classList.remove('dark');
+        updateThemeIcons(false);
+    }
+}
+
+function toggleDarkMode() {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('ff_theme', isDark ? 'dark' : 'light');
+    updateThemeIcons(isDark);
+}
+
+function updateThemeIcons(isDark) {
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    
+    if (darkIcon && lightIcon) {
+        if (isDark) {
+            darkIcon.classList.add('hidden');
+            lightIcon.classList.remove('hidden');
+        } else {
+            darkIcon.classList.remove('hidden');
+            lightIcon.classList.add('hidden');
+        }
+    }
+}
+
+// โหลด Theme เมื่อเปิดหน้าเว็บ
+document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+});
 }
