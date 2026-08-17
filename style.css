@@ -119,3 +119,27 @@ html.dark div:has(input[placeholder*="TH0123456789"]) button {
     border: 1px solid rgba(16, 185, 129, 0.3) !important;
     color: #ffffff !important;
 }
+/* ==========================================
+   🎯 FIX: เปลี่ยนสีอักษรกำไรสุทธิ (Net Profit)
+   ========================================== */
+
+/* 1. เปลี่ยนตัวเลขตัวเงินและคำว่า "บาท" ให้เป็นสีเขียวเข้ม คมชัด */
+div:has(> *:contains("กำไรสุทธิ")),
+div:has(> *:contains("Net Profit")) {
+    color: #047857 !important;
+}
+
+/* 2. ดักจับตัวเลขกำไรและหน่วยบาทโดยตรง */
+html.dark div:has(> *:contains("กำไรสุทธิ")) *,
+html.dark div:has(> *:contains("Net Profit")) * {
+    color: #047857 !important;
+}
+
+/* กันพลาด: ดักจับ Class ข้อความสีเขียวสดแบบ Emerald */
+html.dark div.bg-emerald-50 *,
+html.dark div[class*="bg-emerald"] span,
+html.dark div[class*="bg-emerald"] div,
+html.dark div[class*="bg-green"] span,
+html.dark div[class*="bg-green"] div {
+    color: #047857 !important;
+}
