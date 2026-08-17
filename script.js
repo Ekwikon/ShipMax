@@ -971,3 +971,10 @@ function toggleVoiceRecognition() {
 
     recognition.start();
 }
+function handlePrint() {
+    // บันทึกบัญชีลง Database ก่อน (ถ้ามี)
+    // saveToDatabase();
+
+    // เรียกคำสั่งพิมพ์ของเบราว์เซอร์
+    window.print();
+}
