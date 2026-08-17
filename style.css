@@ -57,16 +57,36 @@ html.dark div[class*="rounded"] {
 }
 
 /* 3. ปรับแก้ข้อความทั่วไป */
-html.dark label,
-html.dark p,
-html.dark span:not(.stat-val):not(.cost-text):not(.ship-text):not(.profit-text),
-html.dark .text-slate-400,
-html.dark .text-slate-500,
-html.dark .text-slate-600,
-html.dark .text-gray-400,
-html.dark .text-gray-500 {
-    color: #cbd5e1 !important;
-    font-weight: 500;
+/* ==========================================
+   🎯 FIX: แก้ปุ่มรีเฟรช GPS ตัวอักษรจม
+   ========================================== */
+
+/* 1. ดันสีปุ่ม GPS ให้เป็นพื้นหลังสีกรมเข้ม ขอบเขียวนีออน ตัวหนังสือขาวสว่าง */
+html.dark button[onclick*="gps"],
+html.dark button[onclick*="GPS"],
+html.dark button[onclick*="location"],
+html.dark button[id*="gps"],
+html.dark button[id*="refresh"] {
+    background-color: #121a2d !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(16, 185, 129, 0.4) !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 2. บังคับตัวอักษรข้างในปุ่ม GPS (รวมถึงไอคอนวงกลมสีชมพู) ไม่ให้โดนสีมืดกลบ */
+html.dark button[onclick*="gps"] *,
+html.dark button[onclick*="GPS"] *,
+html.dark button[id*="gps"] *,
+html.dark button[id*="refresh"] * {
+    color: #ffffff !important;
+}
+
+/* 3. เอฟเฟกต์เมื่อเอาเมาส์ไปชี้ (Hover) */
+html.dark button[onclick*="gps"]:hover,
+html.dark button[onclick*="GPS"]:hover,
+html.dark button[id*="refresh"]:hover {
+    border-color: #10b981 !important;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.35) !important;
 }
 
 html.dark h1, html.dark h2, html.dark h3, html.dark h4, 
@@ -240,21 +260,4 @@ html.dark div[class*="rounded"] {
         box-shadow: 0 0 16px rgba(16, 185, 129, 0.15);
     }
 }
-/* ==========================================
-   🎯 FIX: แก้ไขปุ่มรีเฟรช GPS ตัวอักษรจม
-   ========================================== */
-html.dark button:contains("รีเฟรช"),
-html.dark button[onclick*="GPS"],
-html.dark button[onclick*="gps"],
-html.dark button[id*="refresh"],
-html.dark button[class*="refresh"] {
-    background-color: #121a2d !important;
-    color: #ffffff !important; /* ปรับข้อความให้เป็นสีขาวสว่าง */
-    border: 1px solid rgba(16, 185, 129, 0.4) !important;
-}
 
-/* กรณีปุ่มข้างต้นใช้ span หรือ icon ข้างใน */
-html.dark button:contains("รีเฟรช") *,
-html.dark button[onclick*="gps"] * {
-    color: #ffffff !important;
-}
