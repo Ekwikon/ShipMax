@@ -1,39 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
 
+/* ==========================================
+   🌐 BASE CONFIG & FONTS
+   ========================================== */
+*, html, body, button, input, select, textarea, span, p, h1, h2, h3, h4, h5, h6, a, div, li, td, th {
+    font-family: 'Prompt', sans-serif !important;
+}
+
 body { 
     font-family: 'Prompt', sans-serif; 
 }
 
-/* 🌐 พื้นหลังตาราง Grid แบบ Modern SaaS (Light Mode) */
-.grid-bg {
-    background-color: #ffffff;
-    background-image: 
-        radial-gradient(circle at 50% 30%, rgba(63, 244, 160, 0.05) 0%, transparent 60%),
-        linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
-    background-size: 100% 100%, 36px 36px, 36px 36px;
-    mask-image: radial-gradient(circle at center, black 50%, transparent 98%);
-    -webkit-mask-image: radial-gradient(circle at center, black 50%, transparent 98%);
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-::-webkit-scrollbar-track {
-    background: #0f172a;
-}
-::-webkit-scrollbar-thumb {
-    background: #1e293b;
-    border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: #10b981;
-}
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0f172a; }
+::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #10b981; }
 
 /* ==========================================
-   🌙 DARK MODE COMPONENT STYLING (ปรับแต่งครบทุกหน้า)
+   🌙 DARK MODE COMPONENT STYLING
    ========================================== */
 
 /* 1. พื้นหลังหลักสีดำสนิท + ลาย Grid เขียว Neon */
@@ -48,7 +33,7 @@ html.dark .grid-bg {
     background-size: 32px 32px !important;
 }
 
-/* 2. บังคับการ์ด กล่องตาราง และบล็อกขาวทั้งหมด ให้เป็นสีดำ + ใส่กรอบเขียวเรืองแสง */
+/* 2. การ์ดและกล่ององค์ประกอบทั้งหมด */
 html.dark .bg-white,
 html.dark [class*="bg-white"],
 html.dark div[class*="rounded"] {
@@ -56,37 +41,13 @@ html.dark div[class*="rounded"] {
     border: 1px solid rgba(16, 185, 129, 0.35) !important;
 }
 
-/* 3. ปรับแก้ข้อความทั่วไป */
-/* ==========================================
-   🎯 FIX: แก้ปุ่มรีเฟรช GPS ตัวอักษรจม
-   ========================================== */
-
-/* 1. ดันสีปุ่ม GPS ให้เป็นพื้นหลังสีกรมเข้ม ขอบเขียวนีออน ตัวหนังสือขาวสว่าง */
-html.dark button[onclick*="gps"],
-html.dark button[onclick*="GPS"],
-html.dark button[onclick*="location"],
-html.dark button[id*="gps"],
-html.dark button[id*="refresh"] {
-    background-color: #121a2d !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(16, 185, 129, 0.4) !important;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3) !important;
-}
-
-/* 2. บังคับตัวอักษรข้างในปุ่ม GPS (รวมถึงไอคอนวงกลมสีชมพู) ไม่ให้โดนสีมืดกลบ */
-html.dark button[onclick*="gps"] *,
-html.dark button[onclick*="GPS"] *,
-html.dark button[id*="gps"] *,
-html.dark button[id*="refresh"] * {
-    color: #ffffff !important;
-}
-
-/* 3. เอฟเฟกต์เมื่อเอาเมาส์ไปชี้ (Hover) */
-html.dark button[onclick*="gps"]:hover,
-html.dark button[onclick*="GPS"]:hover,
-html.dark button[id*="refresh"]:hover {
-    border-color: #10b981 !important;
-    box-shadow: 0 0 12px rgba(16, 185, 129, 0.35) !important;
+/* 3. ข้อความพื้นฐาน คมชัดอ่านง่าย (ไม่ดักด้วย !important รุนแรงจนบังคับสีอื่น) */
+html.dark label,
+html.dark p,
+html.dark span,
+html.dark small,
+html.dark div {
+    color: #cbd5e1;
 }
 
 html.dark h1, html.dark h2, html.dark h3, html.dark h4, 
@@ -94,7 +55,7 @@ html.dark strong, html.dark b {
     color: #ffffff !important;
 }
 
-/* 4. ปรับช่องกรอกข้อมูล (Input / Select / Textarea) ให้กลมกลืน */
+/* 4. ช่องกรอกข้อมูล (Input / Select / Textarea) */
 html.dark select,
 html.dark input[type="text"],
 html.dark input[type="number"],
@@ -107,7 +68,7 @@ html.dark textarea {
 
 html.dark input::placeholder,
 html.dark textarea::placeholder {
-    color: #64748b !important;
+    color: #94a3b8 !important;
 }
 
 html.dark input:focus,
@@ -118,14 +79,102 @@ html.dark select:focus {
     outline: none !important;
 }
 
-/* 5. ตารางข้อมูล (Table Header & Cell Fixes) */
-html.dark table {
-    border-collapse: collapse !important;
+/* 5. ปุ่มกดทั่วไป (Fix ปุ่มจมทุกหน้า) */
+html.dark button,
+html.dark a.btn,
+html.dark .btn {
+    color: #ffffff !important;
 }
 
-html.dark table thead,
-html.dark table thead tr,
-html.dark table th {
+html.dark button.bg-white,
+html.dark button[class*="bg-white"],
+html.dark button:not([class*="bg-emerald"]):not([class*="bg-blue"]):not([class*="bg-indigo"]) {
+    background-color: #121a2d !important;
+    border: 1px solid rgba(16, 185, 129, 0.4) !important;
+}
+
+html.dark button:hover {
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4) !important;
+}
+
+/* ==========================================
+   🎯 FIX: แก้ปัญหาตัวหนังสือจมรายจุด
+   ========================================== */
+
+/* แก้ข้อความ ยอดขายรวม (Revenue) และ สินค้าทั้งหมดในคลัง ที่เคยจม */
+html.dark .text-slate-900,
+html.dark .text-slate-800,
+html.dark .text-slate-700,
+html.dark .text-gray-900,
+html.dark .text-gray-800,
+html.dark .text-white {
+    color: #ffffff !important;
+}
+
+/* แก้ปุ่ม คุยกับ AI ผู้ช่วย / ปุ่มรีเฟรช / ปุ่มเว็บไซต์หลัก */
+html.dark button[class*="fixed"],
+html.dark button[onclick*="gps"],
+html.dark button[onclick*="GPS"],
+html.dark a[href*="http"],
+html.dark .btn-secondary {
+    color: #ffffff !important;
+}
+html.dark button[class*="fixed"] *,
+html.dark button[onclick*="gps"] * {
+    color: #ffffff !important;
+}
+
+/* ==========================================
+   🎨 COLOR SPECIFICS: ต้นทุน / ค่าส่ง / กำไร
+   ========================================== */
+
+/* 🔴 1. ต้นทุน (Cost) - สีแดงเรืองแสง */
+html.dark .text-rose-500,
+html.dark .text-rose-400,
+html.dark .text-red-500,
+html.dark .text-red-400,
+html.dark .cost-text,
+html.dark #total-cost {
+    color: #f43f5e !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0 8px rgba(244, 63, 94, 0.3);
+}
+
+/* 🟡 2. ค่าจัดส่ง (Shipping) - สีเหลือง/ส้มเรืองแสง */
+html.dark .text-amber-500,
+html.dark .text-amber-400,
+html.dark .text-orange-500,
+html.dark .text-orange-400,
+html.dark .ship-text,
+html.dark #total-shipping {
+    color: #fbbf24 !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0 8px rgba(251, 191, 36, 0.3);
+}
+
+/* 🟢 3. กำไรสุทธิ (Net Profit) - สีเขียวนีออนเรืองแสง */
+html.dark .text-emerald-500,
+html.dark .text-emerald-400,
+html.dark .text-green-500,
+html.dark .text-green-400,
+html.dark .profit-text,
+html.dark #net-profit,
+html.dark #total-profit {
+    color: #10b981 !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+/* ==========================================
+   📊 TABLE STYLING (ตารางการเงิน + ตารางคลังสินค้า)
+   ========================================== */
+
+html.dark table {
+    border-collapse: collapse !important;
+    width: 100%;
+}
+
+html.dark table thead th {
     background-color: #0e1726 !important;
     color: #34d399 !important;
     border-bottom: 2px solid rgba(16, 185, 129, 0.5) !important;
@@ -138,110 +187,15 @@ html.dark table td {
 }
 
 html.dark table tbody tr:hover {
-    background-color: rgba(16, 185, 129, 0.1) !important;
-}
-
-/* 6. ปรับสีปุ่มที่ยังติดสีขาวให้คุมโทน ดำ-เขียว */
-html.dark button.bg-white,
-html.dark button[class*="bg-white"] {
-    background-color: #121a2d !important;
-    color: #34d399 !important;
-    border: 1px solid rgba(16, 185, 129, 0.4) !important;
-}
-
-html.dark button:hover {
-    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4) !important;
-}
-
-/* ==========================================
-   🎨 NEON STAT CARDS & TABLE COLOR FIXES (แยกสีตามโจทย์)
-   ========================================== */
-
-/* 🔴 1. ต้นทุน (Cost) - อักษรและกรอบสีแดงเรืองแสง */
-html.dark .text-rose-500,
-html.dark .text-red-500,
-html.dark .cost-text,
-html.dark #total-cost,
-html.dark table td:nth-child(4), /* คอลัมน์ ทุนสินค้า ในตาราง */
-html.dark table th:nth-child(4) {
-    color: #f43f5e !important;
-    font-weight: 700 !important;
-    text-shadow: 0 0 8px rgba(244, 63, 94, 0.3);
-}
-
-html.dark [class*="border-rose"],
-html.dark [class*="border-red"],
-html.dark div:has(> #total-cost) {
-    border-color: rgba(244, 63, 94, 0.6) !important;
-    background-color: rgba(244, 63, 94, 0.05) !important;
-}
-
-/* 🟡 2. ค่าจัดส่ง (Shipping) - อักษรและกรอบสีเหลือง/ส้มเรืองแสง */
-html.dark .text-amber-500,
-html.dark .text-orange-500,
-html.dark .ship-text,
-html.dark #total-shipping,
-html.dark table td:nth-child(5), /* คอลัมน์ ค่าจัดส่ง ในตาราง */
-html.dark table th:nth-child(5) {
-    color: #fbbf24 !important;
-    font-weight: 700 !important;
-    text-shadow: 0 0 8px rgba(251, 191, 36, 0.3);
-}
-
-html.dark [class*="border-amber"],
-html.dark [class*="border-orange"],
-html.dark div:has(> #total-shipping) {
-    border-color: rgba(245, 158, 11, 0.6) !important;
-    background-color: rgba(245, 158, 11, 0.05) !important;
-}
-
-/* 🟢 3. กำไรสุทธิ (Net Profit) - อักษรและกรอบสีเขียวนีออนเรืองแสง */
-html.dark #net-profit,
-html.dark #total-profit,
-html.dark .profit-text,
-html.dark .text-emerald-500,
-html.dark .text-emerald-600,
-html.dark table td:nth-child(6), /* คอลัมน์ กำไรสุทธิ ในตาราง */
-html.dark table th:nth-child(6) {
-    color: #10b981 !important;
-    font-weight: 700 !important;
-    text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
-}
-
-html.dark [class*="border-emerald"],
-html.dark [class*="bg-emerald"],
-html.dark div:has(> #net-profit) {
-    border-color: rgba(52, 211, 153, 0.8) !important;
     background-color: rgba(16, 185, 129, 0.08) !important;
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.15) !important;
 }
 
 /* ==========================================
-   ✨ TRANSITION & ANIMATION EFFECTS
+   ✨ TRANSITION & ANIMATION
    ========================================== */
 
 html, body, main, div, table, tr, td, th, button, input, section, nav, header {
     transition: background-color 0.35s ease, border-color 0.35s ease, color 0.25s ease, box-shadow 0.35s ease !important;
-}
-
-#theme-toggle-dark-icon, 
-#theme-toggle-light-icon {
-    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
-}
-
-html.dark #theme-toggle-light-icon {
-    animation: rotateSun 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes rotateSun {
-    from {
-        transform: rotate(-90deg) scale(0.5);
-        opacity: 0;
-    }
-    to {
-        transform: rotate(0deg) scale(1);
-        opacity: 1;
-    }
 }
 
 html.dark .bg-white,
@@ -260,4 +214,3 @@ html.dark div[class*="rounded"] {
         box-shadow: 0 0 16px rgba(16, 185, 129, 0.15);
     }
 }
-
