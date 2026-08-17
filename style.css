@@ -227,3 +227,28 @@ html.dark button[onclick*="generateAndPrintLabel"]:hover,
 html.dark button[onclick*="print"]:hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
 }
+/* ==========================================
+   🎯 FIX ULTIMATE: บังคับสีปุ่มคู่ล่างตามโหมด
+   ========================================== */
+
+/* 1. โหมดสว่าง (Light Mode): บังคับปุ่มฝั่งขวาให้ขอบเทาและตัวอักษรสีเข้มเหมือนปุ่มซ้าย */
+div:has(> button) > button:last-child {
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    background-color: transparent !important;
+    color: #0f172a !important;
+}
+
+div:has(> button) > button:last-child * {
+    color: #0f172a !important;
+}
+
+/* 2. โหมดมืด (Dark Mode): สลับกลับเป็นตัวอักษรสีขาวและขอบสว่าง */
+html.dark div:has(> button) > button:last-child {
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    color: #ffffff !important;
+}
+
+html.dark div:has(> button) > button:last-child * {
+    color: #ffffff !important;
+}
