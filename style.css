@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
 
 /* ==========================================
-   🌐 1. BASE CONFIG & LIGHT MODE (ค่าดั้งเดิม)
+   🌐 1. BASE CONFIG & LIGHT MODE
    ========================================== */
 *, html, body, button, input, select, textarea {
     font-family: 'Prompt', sans-serif !important;
@@ -26,10 +26,9 @@
 
 
 /* ==========================================
-   🌙 2. DARK MODE SAFE (ไม่ลบ/ไม่เปลี่ยน bg-white รวม)
+   🌙 2. DARK MODE MAIN (สำหรับหน้าทั่วไป)
    ========================================== */
 
-/* พื้นหลังหลักมืดสนิท + ลาย Grid */
 html.dark body, 
 html.dark #main-content, 
 html.dark main,
@@ -41,7 +40,16 @@ html.dark .grid-bg {
     background-size: 32px 32px !important;
 }
 
-/* แก้เฉพาะตัวอักษรทั่วไปใน Dark Mode ให้เป็นสีขาวสว่าง */
+/* คืนค่าการ์ดหน้าทั่วไป (คำนวณค่าจัดส่ง) ให้เป็นโทนเข้ม + ขอบเขียว */
+html.dark body > main .bg-white,
+html.dark #main-content .bg-white,
+html.dark div[class*="grid"] > div.bg-white,
+html.dark div[class*="flex"] > div.bg-white {
+    background-color: #0a0f1d !important;
+    border: 1px solid rgba(16, 185, 129, 0.25) !important;
+}
+
+/* ตัวหนังสือทั่วไปใน Dark Mode */
 html.dark body,
 html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark h6,
 html.dark p, html.dark strong, html.dark b,
@@ -51,54 +59,63 @@ html.dark .text-black {
     color: #ffffff !important;
 }
 
-/* คืนค่าและแก้สีข้อความหัวข้อเล็ก (Label/Span) ที่เคยจาง ให้กลับมาเป็นสีเทาสว่างอ่านง่าย */
+/* Label และข้อความหัวข้อในช่องกรอก */
 html.dark label,
-html.dark span.text-gray-400,
-html.dark span.text-slate-400,
-html.dark span.text-gray-500,
-html.dark span.text-slate-500 {
+html.dark span {
     color: #cbd5e1 !important;
 }
 
-/* ตารางข้อมูล Dark Mode */
-html.dark table thead th {
-    background-color: #0e1726 !important;
-    border-bottom: 2px solid rgba(16, 185, 129, 0.4) !important;
-}
-html.dark table td {
-    border-bottom: 1px solid rgba(16, 185, 129, 0.15) !important;
+/* ช่องกรอกข้อมูล Input / Textarea / Select หน้าหลัก */
+html.dark input, html.dark select, html.dark textarea {
+    background-color: #121a2d !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
 }
 
-/* Transition นุ่มนวล */
-html, body, main, div, table, tr, td, th, button, input {
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease !important;
+html.dark input::placeholder, html.dark textarea::placeholder {
+    color: #64748b !important;
 }
 
+/* การ์ดผลลัพธ์ AI สีเหลืองคงความเด่นไว้ */
+html.dark div[class*="bg-amber"],
+html.dark div[class*="bg-yellow"] {
+    background-color: #fffbeb !important;
+    border: 1px solid #fde68a !important;
+}
+html.dark div[class*="bg-amber"] *,
+html.dark div[class*="bg-yellow"] * {
+    color: #92400e !important;
+}
 
 /* ==========================================
-   🎯 FIX SPECIFIC: แก้เฉพาะชื่อขนส่ง & Dropdown
+   🎯 3. TRACKING PAGE ONLY (แก้เฉพาะหน้าติดตามพัสดุ)
    ========================================== */
 
-/* บังคับสีอักษรชื่อขนส่ง (Flash Express) ให้สว่าง คมชัด ไม่กลืน */
-html.dark [role="combobox"],
-html.dark select,
-html.dark button:has(img[src*="flash"]),
-html.dark button:has(img[src*="j&t"]),
-html.dark button:has(img[src*="kerry"]) {
+/* ดักจับเฉพาะกล่องติดตามพัสดุที่มี "1. เลือกบริษัทขนส่ง" */
+html.dark div:has(> div > select),
+html.dark div:has(input[placeholder*="TH0123456789"]) {
+    background-color: #0a0f1d !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+}
+
+/* ตัวหนังสือบอกขั้นตอน "1. เลือกบริษัทขนส่ง" และ "2. กรอกหมายเลข..." ให้เป็นสีขาว */
+html.dark div:has(input[placeholder*="TH0123456789"]) span,
+html.dark div:has(input[placeholder*="TH0123456789"]) label {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+}
+
+/* ชื่อขนส่ง (Flash Express) ในปุ่มและตัวเลือก Dropdown ให้เป็นอักษรสีขาวสว่าง */
+html.dark select option,
+html.dark [role="option"] *,
+html.dark div:has(input[placeholder*="TH0123456789"]) button * {
     color: #ffffff !important;
 }
 
-/* แก้ตัวอักษรข้างในปุ่มเลือกขนส่งทุกตัว */
-html.dark [role="combobox"] *,
-html.dark select option,
-html.dark [role="option"] * {
-    color: #ffffff !important;
-}
-
-/* เมนู Dropdown ตอนกดเลือกขนส่ง ให้พื้นหลังเข้มและอักษรขาวสว่าง */
-html.dark select option,
-html.dark [role="listbox"],
-html.dark [role="option"] {
-    background-color: #0f172a !important;
+/* ปุ่มกดและกล่องในหน้าพัสดุ */
+html.dark div:has(input[placeholder*="TH0123456789"]) input,
+html.dark div:has(input[placeholder*="TH0123456789"]) button {
+    background-color: #121a2d !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
     color: #ffffff !important;
 }
