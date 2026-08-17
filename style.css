@@ -93,6 +93,7 @@ html.dark button[class*="bg-white"] {
 html, body, main, div, table, tr, td, th, button, input {
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease !important;
 }
+
 /* ==========================================
    🎯 FIX SPECIFIC BUTTONS (แก้เฉพาะปุ่มในภาพ)
    ========================================== */
@@ -150,6 +151,7 @@ html.dark button[class*="text-red"],
 html.dark button[class*="text-rose"] {
     color: #fb7185 !important;
 }
+
 /* ==========================================
    🛡️ RESTORE SIDEBAR (คืนค่าเมนูซ้ายมือให้เหมือนเดิม)
    ========================================== */
@@ -179,4 +181,31 @@ html.dark [class*="sidebar"] a, html.dark [class*="sidebar"] button {
     background-color: initial;
     border: initial;
     box-shadow: initial;
+}
+
+/* ==========================================
+   🎯 FIX SPECIFIC: แก้เฉพาะจุดบังข้อความขนส่ง
+   ========================================== */
+
+/* 1. ดึงข้อความหัวข้อ "1. เลือกบริษัทขนส่ง" ขึ้นมาด้านบนสุด ไม่ให้กล่องบัง */
+html.dark label,
+html.dark span {
+    position: relative;
+    z-index: 10 !important;
+}
+
+/* 2. ดึงเมนู Dropdown รายชื่อขนส่ง (Flash, J&T ฯลฯ) ให้อยู่ชั้นบนสุด และเปลี่ยนตัวหนังสือเป็นสีขาวสว่าง */
+html.dark select option,
+html.dark [role="listbox"],
+html.dark [role="option"],
+html.dark div[class*="dropdown"],
+html.dark div[class*="select"] {
+    z-index: 50 !important;
+    color: #ffffff !important;
+}
+
+/* 3. บังคับอักษรชื่อขนส่งใน Dropdown ให้สว่างอ่านง่าย */
+html.dark select option {
+    background-color: #0f172a !important;
+    color: #ffffff !important;
 }
