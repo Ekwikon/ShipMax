@@ -143,3 +143,31 @@ html.dark div[class*="bg-green"] span,
 html.dark div[class*="bg-green"] div {
     color: #047857 !important;
 }
+/* ==========================================
+   🎯 FIX: ปุ่มรีเฟรชสต็อก (Dark Mode)
+   ========================================== */
+
+/* 1. เปลี่ยนพื้นหลังปุ่มรีเฟรชสต็อกเป็นสีกรมเข้ม + ขอบเขียวนีออนจางๆ */
+html.dark button:has(svg),
+html.dark button:has(i),
+html.dark button:contains("รีเฟรช"),
+html.dark button[class*="bg-slate-100"],
+html.dark button[class*="bg-gray-100"],
+html.dark button[class*="bg-slate-200"] {
+    background-color: #121a2d !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+}
+
+/* 2. บังคับสีตัวอักษร "รีเฟรชสต็อก" ให้เป็นสีขาวสว่าง คมชัด */
+html.dark button:contains("รีเฟรช") *,
+html.dark button[class*="bg-slate-100"] *,
+html.dark button[class*="bg-gray-100"] * {
+    color: #ffffff !important;
+}
+
+/* 3. สไตล์ตอนเอาเมาส์ชี้ (Hover) ให้ปุ่มสว่างขึ้นเล็กน้อย */
+html.dark button:contains("รีเฟรช"):hover,
+html.dark button[class*="bg-slate-100"]:hover {
+    background-color: #1e293b !important;
+    border-color: #10b981 !important;
+}
