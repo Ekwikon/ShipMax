@@ -150,3 +150,33 @@ html.dark button[class*="text-red"],
 html.dark button[class*="text-rose"] {
     color: #fb7185 !important;
 }
+/* ==========================================
+   🛡️ RESTORE SIDEBAR (คืนค่าเมนูซ้ายมือให้เหมือนเดิม)
+   ========================================== */
+
+/* 1. ยกเลิกการบังคับสีพื้นหลังและขอบเขียวในการ์ด Sidebar */
+html.dark aside,
+html.dark #sidebar,
+html.dark nav,
+html.dark [class*="sidebar"] {
+    background-color: initial;
+}
+
+html.dark aside div,
+html.dark #sidebar div,
+html.dark nav div,
+html.dark [class*="sidebar"] div {
+    background-color: initial;
+    border: initial;
+    box-shadow: initial;
+}
+
+/* 2. คืนค่าปุ่ม/ลิงก์เมนู Sidebar ให้ใช้สีและสถานะ Active ดั้งเดิม */
+html.dark aside a, html.dark aside button,
+html.dark #sidebar a, html.dark #sidebar button,
+html.dark nav a, html.dark nav button,
+html.dark [class*="sidebar"] a, html.dark [class*="sidebar"] button {
+    background-color: initial;
+    border: initial;
+    box-shadow: initial;
+}
