@@ -9,16 +9,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* สไตล์สำหรับสร้างลายตาราง Grid สีขาว-เทา อัตโนมัติ */
+        .grid-bg {
+            background-color: #f8fafc;
+            background-image: linear-gradient(to right, #e2e8f0 1px, transparent 1px),
+                              linear-gradient(to bottom, #e2e8f0 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+    </style>
 </head>
 <body class="bg-slate-50 text-slate-800 flex h-screen overflow-hidden relative">
 
     <!-- 🌐 เลเยอร์พื้นหลังตาราง Grid Pattern -->
     <div class="absolute inset-0 grid-bg pointer-events-none z-0"></div>
 
-    <!-- Auth Modal -->
-    <div id="login-overlay" class="fixed inset-0 bg-transparent z-50 flex items-center justify-center p-4">
+    <!-- Auth Modal (ปรับเพิ่ม backdrop-blur-xs เพื่อให้เห็นตารางด้านหลังชัดเจน) -->
+    <div id="login-overlay" class="fixed inset-0 bg-slate-900/10 backdrop-blur-xs z-50 flex items-center justify-center p-4">
         <!-- Login Box -->
-        <div id="login-box" class="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full border border-slate-100 space-y-5 sm:space-y-6 relative z-10">
+        <div id="login-box" class="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full border border-slate-100 space-y-5 sm:space-y-6 relative z-10">
             <div class="text-center space-y-2">
                 <img src="ShipMax.png" alt="ShipMax Logo" class="h-16 sm:h-20 w-auto mx-auto mb-2 object-contain">
                 <h2 class="text-xl sm:text-2xl font-bold text-slate-900">เข้าสู่ระบบ ShipMax</h2>
@@ -41,7 +50,7 @@
         </div>
 
         <!-- Register Box -->
-        <div id="register-box" class="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full border border-slate-100 space-y-5 sm:space-y-6 hidden relative z-10">
+        <div id="register-box" class="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full border border-slate-100 space-y-5 sm:space-y-6 hidden relative z-10">
             <div class="text-center space-y-2">
                 <img src="ShipMax.png" alt="ShipMax Logo" class="h-16 sm:h-20 w-auto mx-auto mb-2 object-contain">
                 <h2 class="text-xl sm:text-2xl font-bold text-slate-900">สมัครสมาชิกใหม่</h2>
@@ -116,7 +125,7 @@
         <div id="content-area" class="p-4 sm:p-8"></div>
     </div>
 
-    <!-- AI Floating Chatbot (เพิ่ม hidden และ id="ai-chat-btn") -->
+    <!-- AI Floating Chatbot -->
     <button id="ai-chat-btn" onclick="toggleChatModal()" class="hidden fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-emerald-500 hover:bg-emerald-600 text-slate-950 p-3 sm:p-4 rounded-full shadow-2xl z-40 transition-all transform hover:scale-110 flex items-center gap-2 font-bold text-sm">
         <img src="ai.png" class="w-7 h-7 sm:w-8 sm:h-8 object-contain rounded" alt="AI">
         <span class="hidden md:inline">คุยกับ AI ผู้ช่วย</span>
