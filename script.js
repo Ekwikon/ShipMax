@@ -980,15 +980,32 @@ function handlePrint() {
 }
 async function printLabel() {
     // -------------------------------------------------------------
-    // 1. ดึงข้อมูลจาก Element ID
+    // 1. ดึงข้อมูลทุกช่องจาก DOM (รองรับทั้งแบบ Input และ Text)
     // -------------------------------------------------------------
-    const name = document.getElementById('out-name')?.value || document.getElementById('out-name')?.innerText || '';
-    const phone = document.getElementById('out-phone')?.value || document.getElementById('out-phone')?.innerText || '';
-    const address = document.getElementById('out-address')?.value || document.getElementById('out-address')?.innerText || '';
-    const subDistrict = document.getElementById('out-subdistrict')?.value || document.getElementById('out-subdistrict')?.innerText || '';
-    const district = document.getElementById('out-district')?.value || document.getElementById('out-district')?.innerText || '';
-    const province = document.getElementById('out-province')?.value || document.getElementById('out-province')?.innerText || '';
-    const zipcode = document.getElementById('out-zipcode')?.value || document.getElementById('out-zipcode')?.innerText || '';
+    const inputs = Array.from(document.querySelectorAll('input')).filter(i => i.type !== 'hidden');
+    
+    let name = '', phone = '', address = '', subDistrict = '', district = '', province = '', zipcode = '';
+    
+    // ดึงค่าเรียงจาก 7 ช่องล่างสุดในโซนผลลัพธ์
+    if (inputs.length >= 7) {
+        const resultGroup = inputs.slice(-7);
+        name = resultGroup[0]?.value || '';
+        phone = resultGroup[1]?.value || '';
+        address = resultGroup[2]?.value || '';
+        subDistrict = resultGroup[3]?.value || '';
+        district = resultGroup[4]?.value || '';
+        province = resultGroup[5]?.value || '';
+        zipcode = resultGroup[6]?.value || '';
+    }
+
+    // สำรอง: ดึงตาม ID กรณีดึงจาก Index ไม่เจอ
+    if (!name) name = document.getElementById('out-name')?.value || document.getElementById('out-name')?.innerText || '';
+    if (!phone) phone = document.getElementById('out-phone')?.value || document.getElementById('out-phone')?.innerText || '';
+    if (!address) address = document.getElementById('out-address')?.value || document.getElementById('out-address')?.innerText || '';
+    if (!subDistrict) subDistrict = document.getElementById('out-subdistrict')?.value || document.getElementById('out-subdistrict')?.innerText || '';
+    if (!district) district = document.getElementById('out-district')?.value || document.getElementById('out-district')?.innerText || '';
+    if (!province) province = document.getElementById('out-province')?.value || document.getElementById('out-province')?.innerText || '';
+    if (!zipcode) zipcode = document.getElementById('out-zipcode')?.value || document.getElementById('out-zipcode')?.innerText || '';
 
     const courier = document.getElementById('out-courier')?.innerText || 
                    (document.body.innerText.includes('Flash Express') ? 'Flash Express' : 'ShipMax Express');
@@ -1006,30 +1023,34 @@ async function printLabel() {
     const margin = sellingPrice > 0 ? ((netProfit / sellingPrice) * 100).toFixed(1) : 0;
 
     // -------------------------------------------------------------
-    // 🔑 ดึง Username ของผู้ใช้ที่ล็อกอินอยู่ในขณะนั้น
+    // 🔑 2. ดึง Username บัญชีที่ล็อกอินอยู่จริง
     // -------------------------------------------------------------
-    const currentUser = (typeof currentUserUsername !== 'undefined' && currentUserUsername) 
-        || localStorage.getItem('loggedUser') 
-        || localStorage.getItem('username') 
-        || 'admin'; // 'admin' เป็นค่าเริ่มต้นสำรองกรณีหาตัวแปรผู้ใช้ไม่เจอ
+    let activeUser = '';
+    if (typeof currentUser !== 'undefined' && currentUser) {
+        activeUser = typeof currentUser === 'object' ? (currentUser.username || currentUser.name) : currentUser;
+    }
+    if (!activeUser) {
+        activeUser = localStorage.getItem('currentUser') 
+                  || localStorage.getItem('loggedUser') 
+                  || localStorage.getItem('username') 
+                  || sessionStorage.getItem('username')
+                  || 'admin';
+    }
 
-    // -------------------------------------------------------------
-    // 2. จัดโครงสร้าง orderData ส่งเข้า Google Sheet
-    // -------------------------------------------------------------
     const orderData = {
         type: 'order',
-        id: phone || Date.now(),    // คอลัมน์ A: เบอร์โทร (หรือ Timestamp)
-        name: name,                  // คอลัมน์ B: ชื่อ-นามสกุล
-        courier: courier,            // คอลัมน์ C: ขนส่ง
-        sellingPrice: sellingPrice,  // คอลัมน์ D: ราคาขาย
-        productCost: productCost,    // คอลัมน์ E: ทุนสินค้า
-        shippingPrice: shippingPrice,// คอลัมน์ F: ค่าจัดส่ง
-        netProfit: netProfit,        // คอลัมน์ G: กำไรสุทธิ
-        margin: margin,              // คอลัมน์ H: Margin (%)
-        username: currentUser        // 👈 คอลัมน์ I: ส่งชื่อผู้ใช้งานที่ล็อกอิน
+        id: phone || Date.now(),
+        name: name,
+        courier: courier,
+        sellingPrice: sellingPrice,
+        productCost: productCost,
+        shippingPrice: shippingPrice,
+        netProfit: netProfit,
+        margin: margin,
+        username: activeUser // 👈 ส่ง Username ที่ล็อกอินอยู่จริง
     };
 
-    // เปลี่ยนข้อความบนปุ่มกด
+    // สถานะปุ่มกด
     const printBtn = document.getElementById('btn-print-save') || document.activeElement;
     const originalBtnText = printBtn ? printBtn.innerHTML : "🖨️ พิมพ์ใบปะหน้า + บันทึกบัญชี";
     if (printBtn) {
@@ -1038,7 +1059,7 @@ async function printLabel() {
     }
 
     // -------------------------------------------------------------
-    // 3. ส่งข้อมูลไปยัง Google Sheet & LocalStorage
+    // 3. ส่งเข้า Google Sheet & LocalStorage
     // -------------------------------------------------------------
     try {
         if (typeof GOOGLE_SCRIPT_URL !== 'undefined' && GOOGLE_SCRIPT_URL) {
@@ -1074,17 +1095,17 @@ async function printLabel() {
     }
 
     // -------------------------------------------------------------
-    // 4. สั่งพิมพ์ใบปะหน้า A6
+    // 4. สั่งพิมพ์ใบปะหน้า A6 (รวมที่อยู่หลักครบถ้วน)
     // -------------------------------------------------------------
     const printWindow = window.open('', '_blank', 'width=650,height=850');
     if (!printWindow) {
-        alert("บันทึกข้อมูลเรียบร้อยแล้ว! (กรุณาอนุญาต Pop-up บนเบราว์เซอร์เพื่อพิมพ์ใบปะหน้า)");
+        alert("บันทึกข้อมูลเรียบร้อยแล้ว!");
         return;
     }
 
-    const cleanSubDistrict = subDistrict.startsWith('ตำบล') || subDistrict.startsWith('ต.') ? subDistrict : `ต.${subDistrict}`;
-    const cleanDistrict = district.startsWith('อำเภอ') || district.startsWith('อ.') ? district : `อ.${district}`;
-    const cleanProvince = province.startsWith('จังหวัด') || province.startsWith('จ.') ? province : `จ.${province}`;
+    const cleanSubDistrict = subDistrict ? (subDistrict.startsWith('ตำบล') || subDistrict.startsWith('ต.') ? subDistrict : `ต.${subDistrict}`) : '';
+    const cleanDistrict = district ? (district.startsWith('อำเภอ') || district.startsWith('อ.') ? district : `อ.${district}`) : '';
+    const cleanProvince = province ? (province.startsWith('จังหวัด') || province.startsWith('จ.') ? province : `จ.${province}`) : '';
 
     printWindow.document.write(`
         <!DOCTYPE html>
@@ -1126,7 +1147,7 @@ async function printLabel() {
                         <div class="label-title">ผู้รับ (RECIPIENT)</div>
                         <div class="receiver-name">${name} ${phone ? `(${phone})` : ''}</div>
                         <div class="receiver-address">
-                            ${address}<br>
+                            ${address ? `${address}<br>` : ''}
                             ${cleanSubDistrict} ${cleanDistrict} ${cleanProvince}
                         </div>
                         <div class="zipcode">${zipcode}</div>
