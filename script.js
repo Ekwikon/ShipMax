@@ -980,58 +980,56 @@ function handlePrint() {
 }
 async function printLabel() {
     // -------------------------------------------------------------
-    // 🎯 ดึงข้อมูลจากช่อง Input ในโซน "ผลลัพธ์จากการวิเคราะห์" (รูปที่ 2)
+    // 1. ดึงข้อมูลจาก Element ID
     // -------------------------------------------------------------
-    const inputs = Array.from(document.querySelectorAll('input')).filter(i => i.type !== 'hidden');
-    
-    // ดึงค่าเรียงตามช่องในรูปภาพ 2 (7 ช่องล่างสุด)
-    let name = '', phone = '', address = '', subDistrict = '', district = '', province = '', zipcode = '';
-    
-    if (inputs.length >= 7) {
-        const resultGroup = inputs.slice(-7);
-        name = resultGroup[0]?.value || '';
-        phone = resultGroup[1]?.value || '';
-        address = resultGroup[2]?.value || '';
-        subDistrict = resultGroup[3]?.value || '';
-        district = resultGroup[4]?.value || '';
-        province = resultGroup[5]?.value || '';
-        zipcode = resultGroup[6]?.value || '';
-    }
+    const name = document.getElementById('out-name')?.value || document.getElementById('out-name')?.innerText || '';
+    const phone = document.getElementById('out-phone')?.value || document.getElementById('out-phone')?.innerText || '';
+    const address = document.getElementById('out-address')?.value || document.getElementById('out-address')?.innerText || '';
+    const subDistrict = document.getElementById('out-subdistrict')?.value || document.getElementById('out-subdistrict')?.innerText || '';
+    const district = document.getElementById('out-district')?.value || document.getElementById('out-district')?.innerText || '';
+    const province = document.getElementById('out-province')?.value || document.getElementById('out-province')?.innerText || '';
+    const zipcode = document.getElementById('out-zipcode')?.value || document.getElementById('out-zipcode')?.innerText || '';
 
-    // สำรอง: หากดึงจากลำดับไม่ได้ ให้ลองดึงจาก ID หรือ Text ที่มีอยู่
-    if (!name) name = document.getElementById('out-name')?.value || document.getElementById('out-name')?.innerText || '';
-    if (!address) address = document.getElementById('out-address')?.value || document.getElementById('out-address')?.innerText || '';
+    const courier = document.getElementById('out-courier')?.innerText || 
+                   (document.body.innerText.includes('Flash Express') ? 'Flash Express' : 'ShipMax Express');
 
-    // ดึงชื่อขนส่ง
-    const courierBadge = document.body.innerText.includes('Flash Express') ? 'Flash Express' : 
-                         document.body.innerText.includes('J&T') ? 'J&T Express' : 'ShipMax Express';
-
-    const shippingPrice = parseFloat(document.getElementById('out-price')?.innerText) || 32;
+    const shippingPrice = parseFloat(document.getElementById('out-price')?.innerText) || 0;
     const sellingPrice = parseFloat(document.getElementById('selling-price-input')?.value) || 0;
     const productCost = parseFloat(document.getElementById('product-cost-input')?.value) || 0;
 
-    if (!name) { 
+    if (!name || name === '-') { 
         alert("กรุณาให้ AI สกัดที่อยู่ให้สำเร็จก่อนสั่งพิมพ์ครับ"); 
         return; 
     }
 
-    // คำนวณตัวเลขบัญชี
     const netProfit = sellingPrice - productCost - shippingPrice;
     const margin = sellingPrice > 0 ? ((netProfit / sellingPrice) * 100).toFixed(1) : 0;
 
+    // -------------------------------------------------------------
+    // 🔑 ดึง Username ของผู้ใช้ที่ล็อกอินอยู่ในขณะนั้น
+    // -------------------------------------------------------------
+    const currentUser = (typeof currentUserUsername !== 'undefined' && currentUserUsername) 
+        || localStorage.getItem('loggedUser') 
+        || localStorage.getItem('username') 
+        || 'admin'; // 'admin' เป็นค่าเริ่มต้นสำรองกรณีหาตัวแปรผู้ใช้ไม่เจอ
+
+    // -------------------------------------------------------------
+    // 2. จัดโครงสร้าง orderData ส่งเข้า Google Sheet
+    // -------------------------------------------------------------
     const orderData = {
         type: 'order',
-        id: Date.now(),
-        name: name,
-        courier: courierBadge,
-        sellingPrice: sellingPrice,
-        productCost: productCost,
-        shippingPrice: shippingPrice,
-        netProfit: netProfit,
-        margin: margin
+        id: phone || Date.now(),    // คอลัมน์ A: เบอร์โทร (หรือ Timestamp)
+        name: name,                  // คอลัมน์ B: ชื่อ-นามสกุล
+        courier: courier,            // คอลัมน์ C: ขนส่ง
+        sellingPrice: sellingPrice,  // คอลัมน์ D: ราคาขาย
+        productCost: productCost,    // คอลัมน์ E: ทุนสินค้า
+        shippingPrice: shippingPrice,// คอลัมน์ F: ค่าจัดส่ง
+        netProfit: netProfit,        // คอลัมน์ G: กำไรสุทธิ
+        margin: margin,              // คอลัมน์ H: Margin (%)
+        username: currentUser        // 👈 คอลัมน์ I: ส่งชื่อผู้ใช้งานที่ล็อกอิน
     };
 
-    // เปลี่ยนสถานะปุ่มกด
+    // เปลี่ยนข้อความบนปุ่มกด
     const printBtn = document.getElementById('btn-print-save') || document.activeElement;
     const originalBtnText = printBtn ? printBtn.innerHTML : "🖨️ พิมพ์ใบปะหน้า + บันทึกบัญชี";
     if (printBtn) {
@@ -1040,7 +1038,7 @@ async function printLabel() {
     }
 
     // -------------------------------------------------------------
-    // 🟢 บันทึกข้อมูลลง Google Sheet & LocalStorage
+    // 3. ส่งข้อมูลไปยัง Google Sheet & LocalStorage
     // -------------------------------------------------------------
     try {
         if (typeof GOOGLE_SCRIPT_URL !== 'undefined' && GOOGLE_SCRIPT_URL) {
@@ -1076,7 +1074,7 @@ async function printLabel() {
     }
 
     // -------------------------------------------------------------
-    // 🖨️ สร้างใบปะหน้าแบบข้อมูลครบถ้วนตามรูป 2
+    // 4. สั่งพิมพ์ใบปะหน้า A6
     // -------------------------------------------------------------
     const printWindow = window.open('', '_blank', 'width=650,height=850');
     if (!printWindow) {
@@ -1084,10 +1082,9 @@ async function printLabel() {
         return;
     }
 
-    // ตรวจสอบคำนำหน้าชื่ออำเภอ/จังหวัดไม่ให้ซ้ำซ้อน
+    const cleanSubDistrict = subDistrict.startsWith('ตำบล') || subDistrict.startsWith('ต.') ? subDistrict : `ต.${subDistrict}`;
     const cleanDistrict = district.startsWith('อำเภอ') || district.startsWith('อ.') ? district : `อ.${district}`;
     const cleanProvince = province.startsWith('จังหวัด') || province.startsWith('จ.') ? province : `จ.${province}`;
-    const cleanSubDistrict = subDistrict.startsWith('ตำบล') || subDistrict.startsWith('ต.') ? subDistrict : `ต.${subDistrict}`;
 
     printWindow.document.write(`
         <!DOCTYPE html>
@@ -1100,7 +1097,7 @@ async function printLabel() {
                 body { font-family: 'Prompt', sans-serif; margin: 0; padding: 15px; background: #fff; color: #000; box-sizing: border-box; }
                 .label-container { border: 2px solid #000; border-radius: 8px; padding: 15px; height: 95%; display: flex; flex-direction: column; justify-content: space-between; }
                 .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 8px; }
-                .logo { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+                .logo { font-size: 20px; font-weight: 700; }
                 .courier-badge { color: #555; font-weight: 600; font-size: 13px; }
                 .section { margin-top: 10px; }
                 .label-title { font-size: 11px; font-weight: 600; color: #555; text-transform: uppercase; }
@@ -1116,7 +1113,7 @@ async function printLabel() {
                 <div>
                     <div class="header">
                         <div class="logo">📦 ShipMax</div>
-                        <div class="courier-badge">${courierBadge}</div>
+                        <div class="courier-badge">${courier}</div>
                     </div>
                     <div class="section">
                         <div class="label-title">ผู้ส่ง (SENDER)</div>
@@ -1127,7 +1124,7 @@ async function printLabel() {
                     </div>
                     <div class="receiver-box">
                         <div class="label-title">ผู้รับ (RECIPIENT)</div>
-                        <div class="receiver-name">${name} (${phone})</div>
+                        <div class="receiver-name">${name} ${phone ? `(${phone})` : ''}</div>
                         <div class="receiver-address">
                             ${address}<br>
                             ${cleanSubDistrict} ${cleanDistrict} ${cleanProvince}
