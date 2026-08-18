@@ -979,24 +979,21 @@ function handlePrint() {
     window.print();
 }
 async function printLabel() {
-    // 1. ดึงข้อมูลจาก Element ID ตามโค้ดเดิมของคุณ
+    // 1. ดึงข้อมูลจาก ID หน้าเว็บ
     const name = document.getElementById('out-name')?.value || document.getElementById('out-name')?.innerText || '';
     const courier = document.getElementById('out-courier')?.innerText || '-';
     const shippingPrice = parseFloat(document.getElementById('out-price')?.innerText) || 0;
     const sellingPrice = parseFloat(document.getElementById('selling-price-input')?.value) || 0;
     const productCost = parseFloat(document.getElementById('product-cost-input')?.value) || 0;
 
-    // เช็กเงื่อนไขตามโค้ดเดิม
     if (!name || courier === '-' || courier === '') { 
         alert("กรุณาให้ AI สกัดที่อยู่ให้สำเร็จก่อนสั่งพิมพ์ครับ"); 
         return; 
     }
 
-    // คำนวณกำไรสุทธิ
     const netProfit = sellingPrice - productCost - shippingPrice;
     const margin = sellingPrice > 0 ? ((netProfit / sellingPrice) * 100).toFixed(1) : 0;
 
-    // เตรียมวัตถุข้อมูล orderData
     const orderData = {
         type: 'order',
         id: Date.now(),
@@ -1009,7 +1006,7 @@ async function printLabel() {
         margin: margin
     };
 
-    // เปลี่ยนสถานะปุ่มกด
+    // เปลี่ยนข้อความบนปุ่ม
     const printBtn = document.getElementById('btn-print-save') || document.activeElement;
     const originalBtnText = printBtn ? printBtn.innerHTML : "🖨️ พิมพ์ใบปะหน้า + บันทึกบัญชี";
     if (printBtn) {
@@ -1017,21 +1014,22 @@ async function printLabel() {
         printBtn.disabled = true;
     }
 
-    // 2. ส่งข้อมูลไป Google Sheets (ตามโค้ดเดิม)
+    // 2. บันทึกลง Google Sheet (ปรับเปลี่ยนเป็น keepalive เพื่อป้องกันคำสั่งโดนตัด)
     try {
         if (typeof GOOGLE_SCRIPT_URL !== 'undefined' && GOOGLE_SCRIPT_URL) {
             await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(orderData)
+                body: JSON.stringify(orderData),
+                keepalive: true
             });
         }
     } catch (err) {
-        console.error("ส่ง Google Sheet ไม่สำเร็จ บันทึกลงเครื่องแทน:", err);
+        console.error("ส่ง Google Sheet ไม่สำเร็จ:", err);
     }
 
-    // 3. บันทึกลง LocalStorage และอัปเดต Dashboard (ตามโค้ดเดิม)
+    // 3. บันทึกลง LocalStorage + อัปเดตตารางหน้าเว็บทันที
     if (typeof ordersList !== 'undefined') ordersList.push(orderData);
     if (typeof currentStock !== 'undefined') currentStock -= 1;
 
@@ -1042,19 +1040,18 @@ async function printLabel() {
         localStorage.setItem(DB_KEY_STOCK, currentStock.toString());
     }
 
+    // เรียกฟังก์ชันรีเฟรชตาราง/กราฟหน้าเว็บทันที
     if (typeof loadDashboardAndFinanceData === 'function') {
         loadDashboardAndFinanceData();
     }
 
-    // คืนค่าปุ่มกดกลับมาปกติ
+    // คืนค่าปุ่มกด
     if (printBtn) {
         printBtn.innerHTML = originalBtnText;
         printBtn.disabled = false;
     }
 
-    // -------------------------------------------------------------
-    // 4. ส่วนที่เพิ่มใหม่: ดึงข้อมูลที่อยู่ย่อย แล้วสั่งพิมพ์ใบปะหน้า A6
-    // -------------------------------------------------------------
+    // 4. สั่งพิมพ์ใบปะหน้า (ทำงานหลังบันทึกข้อมูลเรียบร้อยแล้ว)
     const phone = document.getElementById('out-phone')?.value || document.getElementById('out-phone')?.innerText || '-';
     const address = document.getElementById('out-address')?.value || document.getElementById('out-address')?.innerText || '-';
     const subDistrict = document.getElementById('out-subdistrict')?.value || document.getElementById('out-subdistrict')?.innerText || '-';
@@ -1064,7 +1061,7 @@ async function printLabel() {
 
     const printWindow = window.open('', '_blank', 'width=650,height=850');
     if (!printWindow) {
-        alert(`📊 บันทึกบัญชีเรียบร้อย! (ยอดขาย: ${sellingPrice} บ. | กำไร: ${netProfit} บ.)\n⚠️ แต่เบราว์เซอร์บล็อก Pop-up กรุณาเปิดอนุญาต Pop-up เพื่อสั่งพิมพ์ใบปะหน้าครับ`);
+        alert("บันทึกข้อมูลลง Sheet เรียบร้อยแล้ว! (เบราว์เซอร์บล็อก Pop-up สั่งพิมพ์)");
         return;
     }
 
