@@ -212,6 +212,8 @@ async function handleLogin(e) {
             if (resData.status === 'success') {
                 isSuccess = true;
                 loggedUsername = resData.username || user;
+                localStorage.setItem('username', loggedUsername);
+                localStorage.setItem('currentUser', loggedUsername);
             }
         }
     } catch (err) {
@@ -980,32 +982,21 @@ function handlePrint() {
 }
 async function printLabel() {
     // -------------------------------------------------------------
-    // 1. ดึงข้อมูลทุกช่องจาก DOM (รองรับทั้งแบบ Input และ Text)
+    // 1. ดึงข้อมูลแบบระบุ ID แม่นยำ 100% (ไม่เพี้ยนแน่นอน)
     // -------------------------------------------------------------
-    const inputs = Array.from(document.querySelectorAll('input')).filter(i => i.type !== 'hidden');
-    
-    let name = '', phone = '', address = '', subDistrict = '', district = '', province = '', zipcode = '';
-    
-    // ดึงค่าเรียงจาก 7 ช่องล่างสุดในโซนผลลัพธ์
-    if (inputs.length >= 7) {
-        const resultGroup = inputs.slice(-7);
-        name = resultGroup[0]?.value || '';
-        phone = resultGroup[1]?.value || '';
-        address = resultGroup[2]?.value || '';
-        subDistrict = resultGroup[3]?.value || '';
-        district = resultGroup[4]?.value || '';
-        province = resultGroup[5]?.value || '';
-        zipcode = resultGroup[6]?.value || '';
-    }
+    const getValue = (id) => {
+        const el = document.getElementById(id);
+        if (!el) return '';
+        return (el.value !== undefined ? el.value : el.innerText).trim();
+    };
 
-    // สำรอง: ดึงตาม ID กรณีดึงจาก Index ไม่เจอ
-    if (!name) name = document.getElementById('out-name')?.value || document.getElementById('out-name')?.innerText || '';
-    if (!phone) phone = document.getElementById('out-phone')?.value || document.getElementById('out-phone')?.innerText || '';
-    if (!address) address = document.getElementById('out-address')?.value || document.getElementById('out-address')?.innerText || '';
-    if (!subDistrict) subDistrict = document.getElementById('out-subdistrict')?.value || document.getElementById('out-subdistrict')?.innerText || '';
-    if (!district) district = document.getElementById('out-district')?.value || document.getElementById('out-district')?.innerText || '';
-    if (!province) province = document.getElementById('out-province')?.value || document.getElementById('out-province')?.innerText || '';
-    if (!zipcode) zipcode = document.getElementById('out-zipcode')?.value || document.getElementById('out-zipcode')?.innerText || '';
+    const name = getValue('out-name');
+    const phone = getValue('out-phone');
+    const address = getValue('out-address');
+    const subDistrict = getValue('out-subdistrict');
+    const district = getValue('out-district');
+    const province = getValue('out-province');
+    const zipcode = getValue('out-zipcode');
 
     const courier = document.getElementById('out-courier')?.innerText || 
                    (document.body.innerText.includes('Flash Express') ? 'Flash Express' : 'ShipMax Express');
@@ -1015,7 +1006,7 @@ async function printLabel() {
     const productCost = parseFloat(document.getElementById('product-cost-input')?.value) || 0;
 
     if (!name || name === '-') { 
-        alert("กรุณาให้ AI สกัดที่อยู่ให้สำเร็จก่อนสั่งพิมพ์ครับ"); 
+        alert("กรุณาให้ AI สกัดข้อมูลให้สำเร็จก่อนสั่งพิมพ์ครับ"); 
         return; 
     }
 
@@ -1023,34 +1014,37 @@ async function printLabel() {
     const margin = sellingPrice > 0 ? ((netProfit / sellingPrice) * 100).toFixed(1) : 0;
 
     // -------------------------------------------------------------
-    // 🔑 2. ดึง Username บัญชีที่ล็อกอินอยู่จริง
+    // 🔑 2. ดึง Username ของผู้ใช้ที่ล็อกอินอยู่ในขณะนั้น
     // -------------------------------------------------------------
-    let activeUser = '';
+    let loggedInUser = '';
+    // ตรวจสอบตัวแปร Global หรือ LocalStorage ที่ใช้เก็บ Session ในระบบของคุณ
     if (typeof currentUser !== 'undefined' && currentUser) {
-        activeUser = typeof currentUser === 'object' ? (currentUser.username || currentUser.name) : currentUser;
+        loggedInUser = typeof currentUser === 'object' ? (currentUser.username || currentUser.name) : currentUser;
     }
-    if (!activeUser) {
-        activeUser = localStorage.getItem('currentUser') 
-                  || localStorage.getItem('loggedUser') 
-                  || localStorage.getItem('username') 
-                  || sessionStorage.getItem('username')
-                  || 'admin';
+    if (!loggedInUser) {
+        loggedInUser = localStorage.getItem('user') 
+                    || localStorage.getItem('username') 
+                    || localStorage.getItem('currentUser') 
+                    || localStorage.getItem('loggedUser')
+                    || sessionStorage.getItem('username') 
+                    || 'admin';
     }
 
+    // จัดโครงสร้างข้อมูลส่งให้ Sheet (A: ID/เบอร์โทร, B: ชื่อ-นามสกุล)
     const orderData = {
         type: 'order',
-        id: phone || Date.now(),
-        name: name,
-        courier: courier,
-        sellingPrice: sellingPrice,
-        productCost: productCost,
-        shippingPrice: shippingPrice,
-        netProfit: netProfit,
-        margin: margin,
-        username: activeUser // 👈 ส่ง Username ที่ล็อกอินอยู่จริง
+        id: phone || Date.now(),     // คอลัมน์ A: เบอร์โทร
+        name: name,                   // คอลัมน์ B: ชื่อ-นามสกุล
+        courier: courier,             // คอลัมน์ C: ขนส่ง
+        sellingPrice: sellingPrice,   // คอลัมน์ D: ราคาขาย
+        productCost: productCost,     // คอลัมน์ E: ทุนสินค้า
+        shippingPrice: shippingPrice, // คอลัมน์ F: ค่าขนส่ง
+        netProfit: netProfit,         // คอลัมน์ G: กำไรสุทธิ
+        margin: margin,               // คอลัมน์ H: % กำไร
+        username: loggedInUser        // คอลัมน์ I: ผู้ล็อกอินใช้งาน
     };
 
-    // สถานะปุ่มกด
+    // ปุ่มกดกดแล้วขึ้นโหลด
     const printBtn = document.getElementById('btn-print-save') || document.activeElement;
     const originalBtnText = printBtn ? printBtn.innerHTML : "🖨️ พิมพ์ใบปะหน้า + บันทึกบัญชี";
     if (printBtn) {
@@ -1059,7 +1053,7 @@ async function printLabel() {
     }
 
     // -------------------------------------------------------------
-    // 3. ส่งเข้า Google Sheet & LocalStorage
+    // 3. ส่งข้อมูลไป Google Sheet
     // -------------------------------------------------------------
     try {
         if (typeof GOOGLE_SCRIPT_URL !== 'undefined' && GOOGLE_SCRIPT_URL) {
@@ -1077,14 +1071,12 @@ async function printLabel() {
 
     if (typeof ordersList !== 'undefined') ordersList.push(orderData);
     if (typeof currentStock !== 'undefined') currentStock -= 1;
-
     if (typeof DB_KEY_ORDERS !== 'undefined' && typeof ordersList !== 'undefined') {
         localStorage.setItem(DB_KEY_ORDERS, JSON.stringify(ordersList));
     }
     if (typeof DB_KEY_STOCK !== 'undefined' && typeof currentStock !== 'undefined') {
         localStorage.setItem(DB_KEY_STOCK, currentStock.toString());
     }
-
     if (typeof loadDashboardAndFinanceData === 'function') {
         loadDashboardAndFinanceData();
     }
@@ -1095,7 +1087,7 @@ async function printLabel() {
     }
 
     // -------------------------------------------------------------
-    // 4. สั่งพิมพ์ใบปะหน้า A6 (รวมที่อยู่หลักครบถ้วน)
+    // 4. สร้างใบปะหน้า (เรียง: เบอร์โทร -> ชื่อ -> ที่อยู่ -> รหัสไปรษณีย์)
     // -------------------------------------------------------------
     const printWindow = window.open('', '_blank', 'width=650,height=850');
     if (!printWindow) {
@@ -1103,9 +1095,10 @@ async function printLabel() {
         return;
     }
 
-    const cleanSubDistrict = subDistrict ? (subDistrict.startsWith('ตำบล') || subDistrict.startsWith('ต.') ? subDistrict : `ต.${subDistrict}`) : '';
-    const cleanDistrict = district ? (district.startsWith('อำเภอ') || district.startsWith('อ.') ? district : `อ.${district}`) : '';
-    const cleanProvince = province ? (province.startsWith('จังหวัด') || province.startsWith('จ.') ? province : `จ.${province}`) : '';
+    // จัดคำนำหน้า ตำบล/อำเภอ/จังหวัด ให้สวยงาม ไม่ซ้ำซ้อน
+    const cleanSub = subDistrict ? (subDistrict.includes('ต.') || subDistrict.includes('ตำบล') ? subDistrict : `ต.${subDistrict}`) : '';
+    const cleanDist = district ? (district.includes('อ.') || district.includes('อำเภอ') ? district : `อ.${district}`) : '';
+    const cleanProv = province ? (province.includes('จ.') || province.includes('จังหวัด') ? province : `จ.${province}`) : '';
 
     printWindow.document.write(`
         <!DOCTYPE html>
@@ -1115,18 +1108,20 @@ async function printLabel() {
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap');
                 @page { size: A6 portrait; margin: 0; }
-                body { font-family: 'Prompt', sans-serif; margin: 0; padding: 15px; background: #fff; color: #000; box-sizing: border-box; }
-                .label-container { border: 2px solid #000; border-radius: 8px; padding: 15px; height: 95%; display: flex; flex-direction: column; justify-content: space-between; }
-                .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 8px; }
-                .logo { font-size: 20px; font-weight: 700; }
-                .courier-badge { color: #555; font-weight: 600; font-size: 13px; }
-                .section { margin-top: 10px; }
+                body { font-family: 'Prompt', sans-serif; margin: 0; padding: 12px; background: #fff; color: #000; box-sizing: border-box; }
+                .label-container { border: 2px solid #000; border-radius: 8px; padding: 12px; height: 96%; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
+                .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 6px; }
+                .logo { font-size: 18px; font-weight: 700; }
+                .courier-badge { color: #333; font-weight: 600; font-size: 13px; }
+                .section { margin-top: 8px; }
                 .label-title { font-size: 11px; font-weight: 600; color: #555; text-transform: uppercase; }
-                .sender-info { font-size: 12px; line-height: 1.4; color: #333; margin-top: 2px; }
-                .receiver-box { border: 1.5px solid #000; padding: 12px; border-radius: 8px; margin-top: 10px; background: #fff; }
-                .receiver-name { font-size: 15px; font-weight: 700; }
-                .receiver-address { font-size: 13px; line-height: 1.5; margin-top: 6px; color: #111; }
-                .zipcode { font-size: 26px; font-weight: 700; text-align: right; letter-spacing: 2px; margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 6px; }
+                .sender-info { font-size: 11px; line-height: 1.3; color: #333; margin-top: 2px; }
+                
+                .receiver-box { border: 1.5px solid #000; padding: 10px; border-radius: 6px; margin-top: 8px; background: #fff; }
+                .receiver-phone { font-size: 16px; font-weight: 700; color: #000; }
+                .receiver-name { font-size: 15px; font-weight: 600; margin-top: 2px; color: #222; }
+                .receiver-address { font-size: 13px; line-height: 1.4; margin-top: 6px; color: #111; }
+                .zipcode { font-size: 28px; font-weight: 700; text-align: right; letter-spacing: 2px; margin-top: 10px; border-top: 1px dashed #aaa; padding-top: 4px; }
             </style>
         </head>
         <body>
@@ -1145,11 +1140,16 @@ async function printLabel() {
                     </div>
                     <div class="receiver-box">
                         <div class="label-title">ผู้รับ (RECIPIENT)</div>
-                        <div class="receiver-name">${name} ${phone ? `(${phone})` : ''}</div>
+                        <!-- 1. เบอร์โทรศัพท์ขึ้นก่อน -->
+                        <div class="receiver-phone">📞 ${phone || '-'}</div>
+                        <!-- 2. ชื่อ-นามสกุล -->
+                        <div class="receiver-name">👤 ${name}</div>
+                        <!-- 3. ที่อยู่หลัก + ตำบล/อำเภอ/จังหวัด -->
                         <div class="receiver-address">
-                            ${address ? `${address}<br>` : ''}
-                            ${cleanSubDistrict} ${cleanDistrict} ${cleanProvince}
+                            🏠 ${address}<br>
+                            ${cleanSub} ${cleanDist} ${cleanProv}
                         </div>
+                        <!-- 4. รหัสไปรษณีย์ -->
                         <div class="zipcode">${zipcode}</div>
                     </div>
                 </div>
