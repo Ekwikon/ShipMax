@@ -982,7 +982,7 @@ function handlePrint() {
 }
 async function printLabel() {
     // -------------------------------------------------------------
-    // 1. ฟังก์ชันดึงข้อมูลอัจฉริยะ (การันตีที่อยู่หลักไม่หลุด)
+    // 1. ดึงข้อมูลแบบระบุ ID แม่นยำ (แก้ที่อยู่หลักเป็น out-address1)
     // -------------------------------------------------------------
     const getValue = (id) => {
         const el = document.getElementById(id);
@@ -990,27 +990,13 @@ async function printLabel() {
         return (el.value !== undefined ? el.value : el.innerText).trim();
     };
 
-    // ดึงค่าตาม ID ปกติ
-    let name = getValue('out-name');
-    let phone = getValue('out-phone');
-    let address = getValue('out-address');
-    let subDistrict = getValue('out-subdistrict');
-    let district = getValue('out-district');
-    let province = getValue('out-province');
-    let zipcode = getValue('out-zipcode');
-
-    // 🛠️ Fallback: ค้นหาช่อง "ที่อยู่หลัก" กรณี ID out-address ดึงค่าไม่ได้
-    if (!address) {
-        const allInputs = Array.from(document.querySelectorAll('input, textarea'));
-        const addrEl = allInputs.find(input => {
-            const val = input.value || input.innerText || '';
-            const placeholder = input.placeholder || '';
-            return placeholder.includes('ที่อยู่') || 
-                   input.id.includes('address') || 
-                   (val.length > 3 && !val.includes('08') && !val.includes('93000') && val !== name);
-        });
-        if (addrEl) address = (addrEl.value || addrEl.innerText).trim();
-    }
+    const name = getValue('out-name');
+    const phone = getValue('out-phone');
+    const address = getValue('out-address1'); // 👈 ดึงตรงจาก <input id="out-address1">
+    const subDistrict = getValue('out-subdistrict');
+    const district = getValue('out-district');
+    const province = getValue('out-province');
+    const zipcode = getValue('out-zipcode');
 
     const courier = document.getElementById('out-courier')?.innerText || 
                    (document.body.innerText.includes('Flash Express') ? 'Flash Express' : 'ShipMax Express');
@@ -1028,7 +1014,7 @@ async function printLabel() {
     const margin = sellingPrice > 0 ? ((netProfit / sellingPrice) * 100).toFixed(1) : 0;
 
     // -------------------------------------------------------------
-    // 🔑 2. ดึง Username ของผู้ใช้ที่ล็อกอินอยู่ในขณะนั้น
+    // 🔑 2. ดึง Username ผู้ใช้ที่ล็อกอินอยู่ในขณะนั้น
     // -------------------------------------------------------------
     let loggedInUser = '';
     if (typeof currentUser !== 'undefined' && currentUser) {
@@ -1043,6 +1029,7 @@ async function printLabel() {
                     || 'admin';
     }
 
+    // จัดโครงสร้างข้อมูลส่งให้ Sheet
     const orderData = {
         type: 'order',
         id: phone || Date.now(),     // คอลัมน์ A: เบอร์โทร
@@ -1056,7 +1043,7 @@ async function printLabel() {
         username: loggedInUser        // คอลัมน์ I: ผู้ล็อกอินใช้งาน
     };
 
-    // ปุ่มกดขึ้นสถานะกำลังโหลด
+    // แสดงสถานะปุ่มกดกำลังบันทึก
     const printBtn = document.getElementById('btn-print-save') || document.activeElement;
     const originalBtnText = printBtn ? printBtn.innerHTML : "🖨️ พิมพ์ใบปะหน้า + บันทึกบัญชี";
     if (printBtn) {
@@ -1099,7 +1086,7 @@ async function printLabel() {
     }
 
     // -------------------------------------------------------------
-    // 4. สร้างใบปะหน้า (เบอร์โทร -> ชื่อ -> ที่อยู่หลัก + ตำบล/อำเภอ/จังหวัด -> รหัสไปรษณีย์)
+    // 4. สร้างหน้าพิมพ์ใบปะหน้า
     // -------------------------------------------------------------
     const printWindow = window.open('', '_blank', 'width=650,height=850');
     if (!printWindow) {
