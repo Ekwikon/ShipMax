@@ -979,18 +979,43 @@ function handlePrint() {
     window.print();
 }
 async function printLabel() {
-    // 1. ดึงข้อมูลจาก ID หน้าเว็บ
-    const name = document.getElementById('out-name')?.value || document.getElementById('out-name')?.innerText || '';
-    const courier = document.getElementById('out-courier')?.innerText || '-';
-    const shippingPrice = parseFloat(document.getElementById('out-price')?.innerText) || 0;
+    // -------------------------------------------------------------
+    // 🎯 ดึงข้อมูลจากช่อง Input ในโซน "ผลลัพธ์จากการวิเคราะห์" (รูปที่ 2)
+    // -------------------------------------------------------------
+    const inputs = Array.from(document.querySelectorAll('input')).filter(i => i.type !== 'hidden');
+    
+    // ดึงค่าเรียงตามช่องในรูปภาพ 2 (7 ช่องล่างสุด)
+    let name = '', phone = '', address = '', subDistrict = '', district = '', province = '', zipcode = '';
+    
+    if (inputs.length >= 7) {
+        const resultGroup = inputs.slice(-7);
+        name = resultGroup[0]?.value || '';
+        phone = resultGroup[1]?.value || '';
+        address = resultGroup[2]?.value || '';
+        subDistrict = resultGroup[3]?.value || '';
+        district = resultGroup[4]?.value || '';
+        province = resultGroup[5]?.value || '';
+        zipcode = resultGroup[6]?.value || '';
+    }
+
+    // สำรอง: หากดึงจากลำดับไม่ได้ ให้ลองดึงจาก ID หรือ Text ที่มีอยู่
+    if (!name) name = document.getElementById('out-name')?.value || document.getElementById('out-name')?.innerText || '';
+    if (!address) address = document.getElementById('out-address')?.value || document.getElementById('out-address')?.innerText || '';
+
+    // ดึงชื่อขนส่ง
+    const courierBadge = document.body.innerText.includes('Flash Express') ? 'Flash Express' : 
+                         document.body.innerText.includes('J&T') ? 'J&T Express' : 'ShipMax Express';
+
+    const shippingPrice = parseFloat(document.getElementById('out-price')?.innerText) || 32;
     const sellingPrice = parseFloat(document.getElementById('selling-price-input')?.value) || 0;
     const productCost = parseFloat(document.getElementById('product-cost-input')?.value) || 0;
 
-    if (!name || courier === '-' || courier === '') { 
+    if (!name) { 
         alert("กรุณาให้ AI สกัดที่อยู่ให้สำเร็จก่อนสั่งพิมพ์ครับ"); 
         return; 
     }
 
+    // คำนวณตัวเลขบัญชี
     const netProfit = sellingPrice - productCost - shippingPrice;
     const margin = sellingPrice > 0 ? ((netProfit / sellingPrice) * 100).toFixed(1) : 0;
 
@@ -998,7 +1023,7 @@ async function printLabel() {
         type: 'order',
         id: Date.now(),
         name: name,
-        courier: courier,
+        courier: courierBadge,
         sellingPrice: sellingPrice,
         productCost: productCost,
         shippingPrice: shippingPrice,
@@ -1006,7 +1031,7 @@ async function printLabel() {
         margin: margin
     };
 
-    // เปลี่ยนข้อความบนปุ่ม
+    // เปลี่ยนสถานะปุ่มกด
     const printBtn = document.getElementById('btn-print-save') || document.activeElement;
     const originalBtnText = printBtn ? printBtn.innerHTML : "🖨️ พิมพ์ใบปะหน้า + บันทึกบัญชี";
     if (printBtn) {
@@ -1014,7 +1039,9 @@ async function printLabel() {
         printBtn.disabled = true;
     }
 
-    // 2. บันทึกลง Google Sheet (ปรับเปลี่ยนเป็น keepalive เพื่อป้องกันคำสั่งโดนตัด)
+    // -------------------------------------------------------------
+    // 🟢 บันทึกข้อมูลลง Google Sheet & LocalStorage
+    // -------------------------------------------------------------
     try {
         if (typeof GOOGLE_SCRIPT_URL !== 'undefined' && GOOGLE_SCRIPT_URL) {
             await fetch(GOOGLE_SCRIPT_URL, {
@@ -1029,7 +1056,6 @@ async function printLabel() {
         console.error("ส่ง Google Sheet ไม่สำเร็จ:", err);
     }
 
-    // 3. บันทึกลง LocalStorage + อัปเดตตารางหน้าเว็บทันที
     if (typeof ordersList !== 'undefined') ordersList.push(orderData);
     if (typeof currentStock !== 'undefined') currentStock -= 1;
 
@@ -1040,30 +1066,28 @@ async function printLabel() {
         localStorage.setItem(DB_KEY_STOCK, currentStock.toString());
     }
 
-    // เรียกฟังก์ชันรีเฟรชตาราง/กราฟหน้าเว็บทันที
     if (typeof loadDashboardAndFinanceData === 'function') {
         loadDashboardAndFinanceData();
     }
 
-    // คืนค่าปุ่มกด
     if (printBtn) {
         printBtn.innerHTML = originalBtnText;
         printBtn.disabled = false;
     }
 
-    // 4. สั่งพิมพ์ใบปะหน้า (ทำงานหลังบันทึกข้อมูลเรียบร้อยแล้ว)
-    const phone = document.getElementById('out-phone')?.value || document.getElementById('out-phone')?.innerText || '-';
-    const address = document.getElementById('out-address')?.value || document.getElementById('out-address')?.innerText || '-';
-    const subDistrict = document.getElementById('out-subdistrict')?.value || document.getElementById('out-subdistrict')?.innerText || '-';
-    const district = document.getElementById('out-district')?.value || document.getElementById('out-district')?.innerText || '-';
-    const province = document.getElementById('out-province')?.value || document.getElementById('out-province')?.innerText || '-';
-    const zipcode = document.getElementById('out-zipcode')?.value || document.getElementById('out-zipcode')?.innerText || '-';
-
+    // -------------------------------------------------------------
+    // 🖨️ สร้างใบปะหน้าแบบข้อมูลครบถ้วนตามรูป 2
+    // -------------------------------------------------------------
     const printWindow = window.open('', '_blank', 'width=650,height=850');
     if (!printWindow) {
-        alert("บันทึกข้อมูลลง Sheet เรียบร้อยแล้ว! (เบราว์เซอร์บล็อก Pop-up สั่งพิมพ์)");
+        alert("บันทึกข้อมูลเรียบร้อยแล้ว! (กรุณาอนุญาต Pop-up บนเบราว์เซอร์เพื่อพิมพ์ใบปะหน้า)");
         return;
     }
+
+    // ตรวจสอบคำนำหน้าชื่ออำเภอ/จังหวัดไม่ให้ซ้ำซ้อน
+    const cleanDistrict = district.startsWith('อำเภอ') || district.startsWith('อ.') ? district : `อ.${district}`;
+    const cleanProvince = province.startsWith('จังหวัด') || province.startsWith('จ.') ? province : `จ.${province}`;
+    const cleanSubDistrict = subDistrict.startsWith('ตำบล') || subDistrict.startsWith('ต.') ? subDistrict : `ต.${subDistrict}`;
 
     printWindow.document.write(`
         <!DOCTYPE html>
@@ -1076,15 +1100,15 @@ async function printLabel() {
                 body { font-family: 'Prompt', sans-serif; margin: 0; padding: 15px; background: #fff; color: #000; box-sizing: border-box; }
                 .label-container { border: 2px solid #000; border-radius: 8px; padding: 15px; height: 95%; display: flex; flex-direction: column; justify-content: space-between; }
                 .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 8px; }
-                .logo { font-size: 20px; font-weight: 700; }
-                .courier-badge { background: #000; color: #fff; padding: 4px 10px; font-weight: 600; border-radius: 4px; font-size: 13px; }
+                .logo { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+                .courier-badge { color: #555; font-weight: 600; font-size: 13px; }
                 .section { margin-top: 10px; }
                 .label-title { font-size: 11px; font-weight: 600; color: #555; text-transform: uppercase; }
-                .sender-info { font-size: 12px; line-height: 1.4; color: #333; }
-                .receiver-box { border: 1.5px solid #000; padding: 12px; border-radius: 6px; margin-top: 10px; background: #fafafa; }
-                .receiver-name { font-size: 16px; font-weight: 700; }
-                .receiver-address { font-size: 13px; line-height: 1.5; margin-top: 6px; }
-                .zipcode { font-size: 26px; font-weight: 700; text-align: right; letter-spacing: 3px; margin-top: 10px; border-top: 1px dashed #ccc; padding-top: 6px; }
+                .sender-info { font-size: 12px; line-height: 1.4; color: #333; margin-top: 2px; }
+                .receiver-box { border: 1.5px solid #000; padding: 12px; border-radius: 8px; margin-top: 10px; background: #fff; }
+                .receiver-name { font-size: 15px; font-weight: 700; }
+                .receiver-address { font-size: 13px; line-height: 1.5; margin-top: 6px; color: #111; }
+                .zipcode { font-size: 26px; font-weight: 700; text-align: right; letter-spacing: 2px; margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 6px; }
             </style>
         </head>
         <body>
@@ -1092,21 +1116,21 @@ async function printLabel() {
                 <div>
                     <div class="header">
                         <div class="logo">📦 ShipMax</div>
-                        <div class="courier-badge">${courier}</div>
+                        <div class="courier-badge">${courierBadge}</div>
                     </div>
                     <div class="section">
-                        <div class="label-title">ผู้ส่ง (Sender)</div>
+                        <div class="label-title">ผู้ส่ง (SENDER)</div>
                         <div class="sender-info">
                             <strong>ร้านค้า ShipMax Online</strong><br>
                             โทร. 081-234-5678
                         </div>
                     </div>
                     <div class="receiver-box">
-                        <div class="label-title">ผู้รับ (Recipient)</div>
+                        <div class="label-title">ผู้รับ (RECIPIENT)</div>
                         <div class="receiver-name">${name} (${phone})</div>
                         <div class="receiver-address">
                             ${address}<br>
-                            ต.${subDistrict} อ.${district} จ.${province}
+                            ${cleanSubDistrict} ${cleanDistrict} ${cleanProvince}
                         </div>
                         <div class="zipcode">${zipcode}</div>
                     </div>
@@ -1123,4 +1147,3 @@ async function printLabel() {
     `);
     printWindow.document.close();
 }
-
